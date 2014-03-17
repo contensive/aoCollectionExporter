@@ -119,7 +119,7 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
             '
             s = Main.GetUserError() _
                 & vbCrLf & vbTab & "<div class=""responseForm"">" _
-                & vbCrLf & vbTab & vbTab & "<p>Click <a href=""" & Main.ServerFilePath & Replace(CollectionFilename, "\", "/") & """>here</a> to download the collection file</p>" _
+                & vbCrLf & vbTab & vbTab & "<p>Click <a href=""" & Main.serverFilePath & Replace(CollectionFilename, "\", "/") & """>here</a> to download the collection file</p>" _
                 & vbCrLf & vbTab & "</div>"
         Case Else
             '
@@ -232,7 +232,6 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
     If Not Main.IsCSOK(CS) Then
         Call Main.AddUserError("The collection you selected could not be found")
     Else
-        Set Remote = CreateObject("ccRemote.RemoteClass")
         CollectionGuid = Main.GetCSText(CS, "ccGuid")
         If CollectionGuid = "" Then
             CollectionGuid = GuidGenerator.CreateGUID("")
@@ -256,12 +255,12 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
         ' Archive Filenames
         '
         ArchivePath = Main.PhysicalFilePath & "CollectionExport\"
-        InstallFilename = EncodeFilename(CollectionName & ".xml")
+        InstallFilename = encodeFilename(CollectionName & ".xml")
         InstallFilename = ArchivePath & InstallFilename
-        ArchiveFilename = EncodeFilename(CollectionName & ".zip")
+        ArchiveFilename = encodeFilename(CollectionName & ".zip")
         ArchiveFilename = ArchivePath & ArchiveFilename
         AddFileListFilename = ArchivePath & "AddFileList.txt"
-        GetCollection = "CollectionExport\" & EncodeFilename(CollectionName & ".zip")
+        GetCollection = "CollectionExport\" & encodeFilename(CollectionName & ".zip")
         '
         ' Delete old archive file
         '
@@ -290,7 +289,6 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
                 AddFileList = AddFileList & vbCrLf & AddFilename
             End If
             Version40DLLList = Version40DLLList & vbCrLf & ManualFilename
-            'Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
         End If
         
         
@@ -331,7 +329,6 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
                             AddFileList = AddFileList & vbCrLf & AddFilename
                         End If
                         Version40DLLList = Version40DLLList & vbCrLf & Filename
-                        'Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                     End If
                     ResourceCnt = ResourceCnt + 1
                 End If
@@ -727,7 +724,6 @@ Dim recordGuid As String
                             s = s & vbCrLf & vbTab & "<Resource name=""" & kmaEncodeHTML(Filename) & """ type=""www"" path=""" & kmaEncodeHTML(Path) & """ />"
                             AddFileList = AddFileList & vbCrLf & AddFilename
                         End If
-                        'Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                         ResourceCnt = ResourceCnt + 1
                     End If
                 End If
@@ -761,7 +757,6 @@ Dim recordGuid As String
                         s = s & vbCrLf & vbTab & "<Resource name=""" & kmaEncodeHTML(Filename) & """ type=""content"" path=""" & kmaEncodeHTML(Path) & """ />"
                         AddFileList = AddFileList & vbCrLf & AddFilename
                     End If
-                    'Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                     ResourceCnt = ResourceCnt + 1
                 End If
             Next
@@ -796,7 +791,9 @@ Dim OtherXML As String
             AddFileList = AddFileList & vbCrLf & InstallFilename
         End If
         Call fs.SaveFile(AddFileListFilename, AddFileList)
-        Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
+        Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
+        'Set Remote = CreateObject("ccRemote.RemoteClass")
+        'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
     End If
     '
     '
@@ -858,7 +855,7 @@ Private Function GetAddonNode(addonid As Long, ByRef Return_IncludeModuleGuidLis
     On Error GoTo ErrorTrap
     '
     Dim styleId As Long
-    Dim FieldType As String
+    Dim fieldType As String
     Dim fieldTypeID As Long
     Dim TriggerContentID As Long
     Dim StylesTest As String
@@ -1072,9 +1069,9 @@ Private Function GetAddonNode(addonid As Long, ByRef Return_IncludeModuleGuidLis
             CS2 = Main.OpenCSContent("Add-on Content Field Type Rules", "addonid=" & addonid)
             Do While Main.IsCSOK(CS2)
                 fieldTypeID = Main.GetCSInteger(CS2, "contentFieldTypeID")
-                FieldType = Main.GetRecordName("Content Field Types", fieldTypeID)
-                If FieldType <> "" Then
-                    NodeInnerText = NodeInnerText & vbCrLf & vbTab & vbTab & "<type>" & FieldType & "</type>"
+                fieldType = Main.GetRecordName("Content Field Types", fieldTypeID)
+                If fieldType <> "" Then
+                    NodeInnerText = NodeInnerText & vbCrLf & vbTab & vbTab & "<type>" & fieldType & "</type>"
                 End If
                 Call Main.NextCSRecord(CS2)
             Loop
@@ -1262,7 +1259,7 @@ End Function
 ' From ccCommon
 '========================================================================
 '
-Function EncodeFilename(Filename As String) As String
+Function encodeFilename(Filename As String) As String
     ' ##### removed to catch err<>0 problem on error resume next
     '
     Dim Source() As Variant
@@ -1271,9 +1268,9 @@ Function EncodeFilename(Filename As String) As String
     Source = Array("""", "*", "/", ":", "<", ">", "?", "\", "|")
     Replacement = Array("_", "_", "_", "_", "_", "_", "_", "_", "_")
     '
-    EncodeFilename = ReplaceMany(Filename, Source, Replacement)
-    If Len(EncodeFilename) > 254 Then
-        EncodeFilename = Left(EncodeFilename, 254)
+    encodeFilename = ReplaceMany(Filename, Source, Replacement)
+    If Len(encodeFilename) > 254 Then
+        encodeFilename = Left(encodeFilename, 254)
     End If
     '
 End Function
@@ -1400,7 +1397,7 @@ Private Function AddCompatibilityResources(CollectionPath As String, ArchiveFile
     Dim Ptr As Long
     Dim FileArgs() As String
     Dim s As String
-    Dim Remote As Object
+    'Dim Remote As Object
     Dim FolderList As String
     Dim Folders() As String
     Dim FolderArgs() As String
@@ -1426,7 +1423,7 @@ Private Function AddCompatibilityResources(CollectionPath As String, ArchiveFile
     '
     ' Process files in this path
     '
-    Set Remote = CreateObject("ccRemote.RemoteClass")
+    'Set Remote = CreateObject("ccRemote.RemoteClass")
     FileList = Main.GetFileList(CollectionPath)
     If FileList <> "" Then
         Files = Split(FileList, vbCrLf)
@@ -1455,7 +1452,8 @@ Private Function AddCompatibilityResources(CollectionPath As String, ArchiveFile
                         '
                         s = s & vbCrLf & vbTab & "<Resource name=""" & kmaEncodeHTML(Filename) & """ type=""content"" path=""" & kmaEncodeHTML(SubPath) & """ />"
                         AddFilename = CollectionPath & SubPath & "\" & Filename
-                        Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
+                        Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
+                        'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                     ElseIf LCase(FileExt) = "dll" Then
                         '
                         ' Executable resources
@@ -1463,14 +1461,16 @@ Private Function AddCompatibilityResources(CollectionPath As String, ArchiveFile
                         s = s & vbCrLf & vbTab & "<Resource name=""" & kmaEncodeHTML(Filename) & """ type=""executable"" path=""" & kmaEncodeHTML(SubPath) & """ />"
                         Return_Version40DLLList = Return_Version40DLLList & vbCrLf & Filename
                         AddFilename = CollectionPath & SubPath & "\" & Filename
-                        Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
+                        Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
+                        'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                     Else
                         '
                         ' www resources
                         '
                         s = s & vbCrLf & vbTab & "<Resource name=""" & kmaEncodeHTML(Filename) & """ type=""www"" path=""" & kmaEncodeHTML(SubPath) & """ />"
                         AddFilename = CollectionPath & SubPath & "\" & Filename
-                        Call Remote.ExecuteCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
+                        Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
+                        'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                     End If
                 End If
             End If
@@ -1499,3 +1499,29 @@ Private Function EncodeCData(Source As String) As String
 ErrorTrap:
     Call HandleClassTrapError("EncodeCData")
 End Function
+'
+'
+'
+Private Sub runAtServer(cmd As String, arg As String)
+    On Error GoTo ErrorTrap
+    '
+    Dim runAtServer As Object
+    '
+    On Error Resume Next
+    Set runAtServer = CreateObject("contensive.runAtServerClass")
+    If Err.Number <> 0 Then
+        '
+        ' old object
+        '
+        Set runAtServer = CreateObject("ccRemote.RemoteClass")
+    End If
+    Call runAtServer.executeCmd(cmd, arg)
+    'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
+    '
+    Exit Sub
+    '
+    ' ----- Error Trap
+    '
+ErrorTrap:
+    Call HandleClassTrapError("runAtServer")
+End Sub
