@@ -56,9 +56,11 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
     Dim CollectionFile As String
     Dim CollectionFilename As String
     Dim s As String
+    Dim hint As String
     '
     ' Load any Add-on Instance Options selected by the administrator
     '
+    hint = "execute, enter"
     Set Main = MainObject
     Set Csv = CsvObject
     Argument1 = CsvObject.GetAddonOption("Argument1", OptionString)
@@ -71,6 +73,8 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
     '
     ' Process the current form submission
     '
+hint = hint & ",100"
+Call Main.testpoint("hint=" & hint)
     If Button <> "" Then
         Select Case FormID
             Case FormIDDisplayResults
@@ -81,6 +85,8 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
                 '
                 ' process the Select Collection Form button
                 '
+hint = hint & ",200"
+Call Main.testpoint("hint=" & hint)
                 CollectionID = Main.GetStreamInteger(RequestNameCollectionID)
                 CollectionName = Main.GetRecordName("Add-on Collections", CollectionID)
                 If CollectionName = "" Then
@@ -92,6 +98,8 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
                         AddExecutableFilename = "CollectionExport\" & AddExecutableFilename
                         Call Main.SaveStreamFile(RequestnameExecutableFile, "CollectionExport\")
                     End If
+hint = hint & ",300"
+Call Main.testpoint("hint=" & hint)
                     CollectionFilename = GetCollection(CollectionID, AddExecutableFilename, Ver40Compatibility)
                     'CollectionFile = GetCollection(CollectionID)
                     'If CollectionFile = "" Then
@@ -109,6 +117,8 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
                 End If
         End Select
     End If
+hint = hint & ",400"
+Call Main.testpoint("hint=" & hint)
     '
     ' Reply with the next form
     '
@@ -117,6 +127,8 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
             '
             ' Diplay the results page
             '
+hint = hint & ",500"
+Call Main.testpoint("hint=" & hint)
             s = Main.GetUserError() _
                 & vbCrLf & vbTab & "<div class=""responseForm"">" _
                 & vbCrLf & vbTab & vbTab & "<p>Click <a href=""" & Main.serverFilePath & Replace(CollectionFilename, "\", "/") & """>here</a> to download the collection file</p>" _
@@ -138,6 +150,8 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
                 & vbCrLf & vbTab & "</div>"
     End Select
     '
+hint = hint & ",600"
+Call Main.testpoint("hint=" & hint)
     Execute = "" _
         & vbCrLf & vbTab & "<div class=""collectionExport"">" _
         & kmaIndent(s) _
@@ -145,7 +159,7 @@ Public Function Execute(CsvObject As Object, MainObject As Object, OptionString 
     '
     Exit Function
 ErrorTrap:
-    Call HandleClassTrapError("Execute")
+    Call HandleClassTrapError("Execute, hint=[" & hint & "]")
 End Function
 '
 '
@@ -218,20 +232,25 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
     Dim CollectionPath As String
     Dim LastChangeDate As Date
     Dim AddonPath As String
-    Dim fs As New kmaFileSystem3.FileSystemClass
+    'Dim fs As New kmaFileSystem3.FileSystemClass
     Dim AddFileList As String
     Dim AddFileListFilename As String
     Dim IncludeModuleGuidList As String
     Dim Version40DLLList As String
     Dim ExecFileListNode As String
     Dim blockNavigatorNode As Boolean
+    Dim kmafs As Object
     '
+    Set kmafs = CreateObject("kmaFileSystem3.FileSystemClass")
+    '
+Call Main.testpoint("getCollection, enter")
     IncludeSharedStyleGuidList = ""
     '
     CS = Main.OpenCSContentRecord("Add-on Collections", CollectionID)
     If Not Main.IsCSOK(CS) Then
         Call Main.AddUserError("The collection you selected could not be found")
     Else
+Call Main.testpoint("getCollection, 100")
         CollectionGuid = Main.GetCSText(CS, "ccGuid")
         If CollectionGuid = "" Then
             CollectionGuid = GuidGenerator.CreateGUID("")
@@ -254,21 +273,31 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
         '
         ' Archive Filenames
         '
+Call Main.testpoint("getCollection, 200")
         ArchivePath = Main.PhysicalFilePath & "CollectionExport\"
+Call Main.testpoint("getCollection, 201")
         InstallFilename = encodeFilename(CollectionName & ".xml")
+Call Main.testpoint("getCollection, 202")
         InstallFilename = ArchivePath & InstallFilename
+Call Main.testpoint("getCollection, 203")
         ArchiveFilename = encodeFilename(CollectionName & ".zip")
+Call Main.testpoint("getCollection, 204")
         ArchiveFilename = ArchivePath & ArchiveFilename
+Call Main.testpoint("getCollection, 205")
         AddFileListFilename = ArchivePath & "AddFileList.txt"
+Call Main.testpoint("getCollection, 206")
         GetCollection = "CollectionExport\" & encodeFilename(CollectionName & ".zip")
+Call Main.testpoint("getCollection, 207")
         '
         ' Delete old archive file
         '
-        Call fs.DeleteFile(ArchiveFilename)
+        Call kmafs.DeleteFile(ArchiveFilename)
+        'Call fs.DeleteFile(ArchiveFilename)
         '
         ' Manual Upload Executable
         ' Do not add node yet, just get the file and make the node so executables can be added for V4 compatibility
         '
+Call Main.testpoint("getCollection, 300")
         Version40DLLList = ""
         If AddExecutableFilename <> "" Then
             '
@@ -296,6 +325,7 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
         ' Build executable file list Resource Node so executables can be added to addons for Version40compatibility
         '   but save it for the end, executableFileList
         '
+Call Main.testpoint("getCollection, 400")
         AddonPath = Replace(Main.PhysicalccLibPath(), "\cclib", "\addons\", , , vbTextCompare)
         FileList = Main.GetCSText(CS, "execFileList")
         If FileList <> "" Then
@@ -334,6 +364,7 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
                 End If
             Next
         End If
+Call Main.testpoint("getCollection, 500")
         If (ResourceCnt = 0) And (CollectionPath <> "") Then
             '
             ' If no resources were in the collection record, this might be an old installation
@@ -362,6 +393,7 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
         '
         ' Data Records
         '
+Call Main.testpoint("getCollection, 600")
         DataRecordList = Main.GetCSText(CS, "DataRecordList")
         If DataRecordList <> "" Then
             DataRecords = Split(DataRecordList, vbCrLf)
@@ -588,6 +620,7 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
         '
         ' CDef
         '
+Call Main.testpoint("getCollection, 700")
         CS2 = Main.OpenCSContent("Add-on Collection CDef Rules", "CollectionID=" & CollectionID)
         Do While Main.IsCSOK(CS2)
             ContentID = Main.GetCSInteger(CS2, "contentid")
@@ -627,6 +660,8 @@ Private Function GetCollection(CollectionID As Long, AddExecutableFilename As St
         '
         ' Scripting Modules
         '
+Call Main.testpoint("getCollection, 800")
+        
         If IncludeModuleGuidList <> "" Then
             Modules = Split(IncludeModuleGuidList, vbCrLf)
             For Ptr = 0 To UBound(Modules)
@@ -786,15 +821,18 @@ Dim OtherXML As String
         '
         ' Save the installation file and add it to the archive
         '
-        Call fs.SaveFile(InstallFilename, s)
+        Call kmafs.SaveFile(InstallFilename, s)
+        'Call fs.SaveFile(InstallFilename, s)
         If InStr(1, vbCrLf & AddFileList, vbCrLf & InstallFilename, vbTextCompare) = 0 Then
             AddFileList = AddFileList & vbCrLf & InstallFilename
         End If
-        Call fs.SaveFile(AddFileListFilename, AddFileList)
+        Call kmafs.SaveFile(AddFileListFilename, AddFileList)
+        'Call fs.SaveFile(AddFileListFilename, AddFileList)
         Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
         'Set Remote = CreateObject("ccRemote.RemoteClass")
         'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
     End If
+Call Main.testpoint("getCollection, exit")
     '
     '
     Exit Function
@@ -1294,23 +1332,23 @@ Friend Sub GetLocalCollectionArgs(CollectionGuid As String, Return_CollectionPat
     Dim Ptr As Long
     Dim CollectionPath As String
     Dim LastChangeDate As Date
-    Dim Hint As String
+    Dim hint As String
     Dim MatchFound As Boolean
     Dim LocalName As String
     '
     MatchFound = False
     Return_CollectionPath = ""
     Return_LastChagnedate = CDate(0)
-    Hint = "Match guid [" & CollectionGuid & "], Loading"
+    hint = "Match guid [" & CollectionGuid & "], Loading"
     Call Doc.loadXML(GetConfig)
     Do While Doc.readyState <> 4 And Ptr < 100
-        Hint = Hint & ",waiting for load"
+        hint = hint & ",waiting for load"
         Sleep (100)
         DoEvents
         Ptr = Ptr + 1
     Loop
     If Doc.parseError.errorCode <> 0 Then
-        Hint = Hint & ",parse error"
+        hint = hint & ",parse error"
         'Call AppendClassLogFile("Server", "", "GetLocalCollectionArgs, Hint=[" & Hint & "], Error loading Collections.xml file. The error was [" & Doc.parseError.reason & ", line " & Doc.parseError.Line & ", character " & Doc.parseError.linepos & "]")
     Else
         If LCase(Doc.documentElement.baseName) <> LCase(CollectionListRootNode) Then
@@ -1321,7 +1359,7 @@ Friend Sub GetLocalCollectionArgs(CollectionGuid As String, Return_CollectionPat
                     'Call AppendClassLogFile("Server", "", "GetLocalCollectionArgs, basename was not collectionlist, [" & .BaseName & "].")
                 Else
                     CollectionFound = False
-                    Hint = Hint & ",checking nodes [" & .childNodes.length & "]"
+                    hint = hint & ",checking nodes [" & .childNodes.length & "]"
                     For Each LocalListNode In .childNodes
                         LocalName = "no name found"
                         LocalPath = ""
@@ -1344,7 +1382,7 @@ Friend Sub GetLocalCollectionArgs(CollectionGuid As String, Return_CollectionPat
                                     End Select
                                 Next
                         End Select
-                        Hint = Hint & ",checking node [" & LocalName & "]"
+                        hint = hint & ",checking node [" & LocalName & "]"
                         If LCase(CollectionGuid) = LocalGuid Then
                             Return_CollectionPath = CollectionPath
                             Return_LastChagnedate = LastChangeDate
@@ -1502,7 +1540,7 @@ End Function
 '
 '
 '
-Private Sub runAtServer(cmd As String, arg As String)
+Private Sub runAtServer(Cmd As String, Arg As String)
     On Error GoTo ErrorTrap
     '
     Dim runAtServer As Object
@@ -1515,7 +1553,7 @@ Private Sub runAtServer(cmd As String, arg As String)
         '
         Set runAtServer = CreateObject("ccRemote.RemoteClass")
     End If
-    Call runAtServer.executeCmd(cmd, arg)
+    Call runAtServer.executeCmd(Cmd, Arg)
     'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
     '
     Exit Sub
