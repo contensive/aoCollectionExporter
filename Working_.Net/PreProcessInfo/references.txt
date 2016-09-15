@@ -1,0 +1,54 @@
+<References>
+  <Reference Include="System" />
+  <Reference Include="System.Data" />
+  <Reference Include="System.Drawing" />
+  <Reference Include="System.Windows.Forms" />
+  <Reference Include="System.XML" />
+  <COMReference Include="CSGUID">
+    <Guid>{1C57E761-551D-11D3-9C51-006097C3EAE4}</Guid>
+    <Lcid>0</Lcid>
+    <VersionMajor>3</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <WrapperTool>tlbimp</WrapperTool>
+  </COMReference>
+  <COMReference Include="kmaFileSystem3">
+    <Guid>{DFF3508D-D3BF-4D2E-AE73-A8374E764F07}</Guid>
+    <Lcid>0</Lcid>
+    <VersionMajor>3</VersionMajor>
+    <VersionMinor>4</VersionMinor>
+    <WrapperTool>tlbimp</WrapperTool>
+  </COMReference>
+  <COMReference Include="ccRemote">
+    <Guid>{1C32D516-C61D-4545-992C-50626D6CAF3E}</Guid>
+    <Lcid>0</Lcid>
+    <VersionMajor>2</VersionMajor>
+    <VersionMinor>2</VersionMinor>
+    <WrapperTool>tlbimp</WrapperTool>
+  </COMReference>
+  <COMReference Include="IWshRuntimeLibrary">
+    <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
+    <Lcid>0</Lcid>
+    <VersionMajor>1</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <WrapperTool>tlbimp</WrapperTool>
+  </COMReference>
+  <COMReference Include="Scripting">
+    <Guid>{420B2830-E718-11CF-893D-00A0C9054228}</Guid>
+    <Lcid>0</Lcid>
+    <VersionMajor>1</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <WrapperTool>tlbimp</WrapperTool>
+  </COMReference>
+  <Reference Include="Microsoft.VisualBasic.Compatibility.Data" />
+  <Reference Include="MSDATASRC">
+    <Name>MSDATASRC</Name>
+  </Reference>
+  <COMReference Include="Microsoft.StdFormat">
+    <Guid>{6B263850-900B-11D0-9484-00A0C91110ED}</Guid>
+    <Lcid>0</Lcid>
+    <VersionMajor>1</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <WrapperTool>primary</WrapperTool>
+  </COMReference>
+  <Reference Include="Microsoft.VisualBasic" />
+</References>

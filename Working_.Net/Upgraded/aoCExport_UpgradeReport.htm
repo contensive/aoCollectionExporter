@@ -1,0 +1,182 @@
+﻿<html>
+	<head>
+		<META HTTP-EQUIV="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="_UpgradeReport_Files\UpgradeReport.css">
+		<title>aoCExport.vbp Upgrade Report</title>
+		
+		<script language="javascript">
+			function outliner () {
+				oMe = window.event.srcElement
+				//get child element
+				var child = document.all[event.srcElement.getAttribute("child",false)];
+				//if child element exists, expand or collapse it.
+				if (null != child)
+					child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+			}
+		
+			function changepic() {
+				uMe = window.event.srcElement;
+				var check = uMe.src.toLowerCase();
+				if (check.lastIndexOf("upgradereport_plus.gif") != -1)
+				{
+					uMe.src = "_UpgradeReport_Files/UpgradeReport_Minus.gif"
+				}
+				else
+				{
+					uMe.src = "_UpgradeReport_Files/UpgradeReport_Plus.gif"
+				}
+			}
+		</script>
+		
+	</head>
+	<body topmargin="0" leftmargin="0" rightmargin="0" onclick="outliner();">
+		<h1>Upgrade Report for aoCExport.vbp</h1>
+		
+		<p><span class="note">
+		<b>Time of Upgrade:  </b>9/14/2016 6:09 PM<br>
+		</span></p>
+		
+		<h2>List of Project Files</h2>
+		<table cellpadding="2" cellspacing="0" width="98%" border="1"bordercolor="white" class="infotable">
+			<tr>
+				<td nowrap class="header">New Filename</td>
+				<td nowrap class="header">Original Filename</td>
+				<td nowrap class="header">File Type</td>
+				<td nowrap class="header">Status</td>
+				<td nowrap class="header">Errors</td>
+				<td nowrap class="header">Warnings</td>
+				<td nowrap class="header">Total Issues</td>
+			</tr>
+		<tr class="row">
+			<td class="content"><IMG alt="expand/collapse section" class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Minus.gif" width="9" child="issue0">&nbsp;(Global Issues)</td>
+			<td class="content"></td>
+			<td class="content"></td>
+			<td class="content">
+		</td>	<td class="content">0</td>
+			<td class="content">309</td>
+			<td class="content">309</td>
+		</tr>
+			<tr id="issue0" bgcolor="#ffffff"><td colspan="8">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="8" class="issuetitle">Global update issues:</td></tr><tr><td width="10" class="issuehdr">#</td><td class="issuehdr" nowrap>Severity</td><td class="issuehdr">Location</td><td class="issuehdr">Object Type</td><td class="issuehdr">Object Name</td><td class="issuehdr">Property</td><td class="issuehdr">Description</td><td class="issuehdr">Qty</td></tr>
+					<tr><td width="10" class="issuecontent">1</td><td class="issuecontent" nowrap>Global Warning</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1038.aspx'>Default Properties (Late Binding) will be resolved using a Helper.</a></td><td class="issuecontent">45</td></tr>
+					<tr><td width="10" class="issuecontent">2</td><td class="issuecontent" nowrap>Global Warning</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1070.aspx'>Member access from a dynamic/late binding object will be resolved using the ReflectionHelper</a></td><td class="issuecontent">264</td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="expand/collapse section" class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue1">&nbsp;ccCommonModule.cs</td>
+			<td class="content">ccCommonModule.bas</td>
+			<td class="content">Module</td>
+			<td class="content">
+		Upgraded with issues</td>	<td class="content">2</td>
+			<td class="content">16</td>
+			<td class="content">18</td>
+		</tr>
+			<tr class="collapsed" id="issue1" bgcolor="#ffffff"><td colspan="8">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="8" class="issuetitle">Upgrade Issues for ccCommonModule.bas:</td></tr><tr><td width="10" class="issuehdr">#</td><td class="issuehdr" nowrap>Severity</td><td class="issuehdr">Location</td><td class="issuehdr">Object Type</td><td class="issuehdr">Object Name</td><td class="issuehdr">Property</td><td class="issuehdr">Description</td><td class="issuehdr">Qty</td></tr>
+					<tr><td width="10" class="issuecontent">1</td><td class="issuecontent" nowrap>To Do</td><td class="issuecontent">AppendLogFile2</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1065.aspx'>Error handling statement (On Error Goto) could not be converted.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">2</td><td class="issuecontent" nowrap>To Do</td><td class="issuecontent">AppendLogFile2</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1065.aspx'>Error handling statement (On Error Resume Next) could not be converted.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">3</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">AppendLogFile2</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">2</td></tr>
+					<tr><td width="10" class="issuecontent">4</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">ccAddTabEntry</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">5</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">ccGetTabs</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">6</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">ConvertLinksToAbsolute</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">7</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">EncodeXML</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">6</td></tr>
+					<tr><td width="10" class="issuecontent">8</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">OldccGetTabs</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">9</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">SetRMBLong</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">2</td></tr>
+					<tr><td width="10" class="issuecontent">10</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">SetRMBString</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">2</td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="expand/collapse section" class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue2">&nbsp;CExportClass.cs</td>
+			<td class="content">CExportClass.cls</td>
+			<td class="content">Class Module</td>
+			<td class="content">
+		Upgraded with issues</td>	<td class="content">5</td>
+			<td class="content">5</td>
+			<td class="content">10</td>
+		</tr>
+			<tr class="collapsed" id="issue2" bgcolor="#ffffff"><td colspan="8">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="8" class="issuetitle">Upgrade Issues for CExportClass.cls:</td></tr><tr><td width="10" class="issuehdr">#</td><td class="issuehdr" nowrap>Severity</td><td class="issuehdr">Location</td><td class="issuehdr">Object Type</td><td class="issuehdr">Object Name</td><td class="issuehdr">Property</td><td class="issuehdr">Description</td><td class="issuehdr">Qty</td></tr>
+					<tr><td width="10" class="issuecontent">1</td><td class="issuecontent" nowrap>To Do</td><td class="issuecontent">runAtServer</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1065.aspx'>Error handling statement (On Error Goto) could not be converted.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">2</td><td class="issuecontent" nowrap>To Do</td><td class="issuecontent">runAtServer</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1069.aspx'>Error handling statement (On Error Resume Next) was converted to a pattern that might have a different behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">3</td><td class="issuecontent" nowrap>Compile Error</td><td class="issuecontent">GetLocalCollectionArgs</td><td class="issuecontent">MSXML2.DOMDocument</td><td class="issuecontent">Doc</td><td class="issuecontent">parseError</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2064.aspx'>MSXML2.DOMDocument property Doc.parseError was not upgraded.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">4</td><td class="issuecontent" nowrap>Compile Error</td><td class="issuecontent">GetLocalCollectionArgs</td><td class="issuecontent">MSXML2.DOMDocument</td><td class="issuecontent">Doc</td><td class="issuecontent">readyState</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2064.aspx'>MSXML2.DOMDocument property Doc.readyState was not upgraded.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">5</td><td class="issuecontent" nowrap>Compile Error</td><td class="issuecontent">GetLocalCollectionArgs</td><td class="issuecontent">MSXML2.IXMLDOMParseError</td><td class="issuecontent">parseError</td><td class="issuecontent">errorCode</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2064.aspx'>MSXML2.IXMLDOMParseError property parseError.errorCode was not upgraded.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">6</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">encodeFilename</td><td class="issuecontent">Variant</td><td class="issuecontent">_HiddenModule</td><td class="issuecontent">array</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Array has a new behavior.</a></td><td class="issuecontent">2</td></tr>
+					<tr><td width="10" class="issuecontent">7</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">HandleClassTrapError</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">8</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">runAtServer</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">9</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">runAtServer</td><td class="issuecontent">Variant</td><td class="issuecontent">Interaction</td><td class="issuecontent">CreateObject</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi7008.aspx'>The ProgId could not be found on computer where this application was migrated</a></td><td class="issuecontent">1</td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="expand/collapse section" class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue3">&nbsp;kmaCommonModule.cs</td>
+			<td class="content">kmaCommonModule.bas</td>
+			<td class="content">Module</td>
+			<td class="content">
+		Upgraded with issues</td>	<td class="content">2</td>
+			<td class="content">29</td>
+			<td class="content">31</td>
+		</tr>
+			<tr class="collapsed" id="issue3" bgcolor="#ffffff"><td colspan="8">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="8" class="issuetitle">Upgrade Issues for kmaCommonModule.bas:</td></tr><tr><td width="10" class="issuehdr">#</td><td class="issuehdr" nowrap>Severity</td><td class="issuehdr">Location</td><td class="issuehdr">Object Type</td><td class="issuehdr">Object Name</td><td class="issuehdr">Property</td><td class="issuehdr">Description</td><td class="issuehdr">Qty</td></tr>
+					<tr><td width="10" class="issuecontent">1</td><td class="issuecontent" nowrap>To Do</td><td class="issuecontent">kmaByteArrayToString</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1069.aspx'>Error handling statement (On Error Resume Next) was converted to a pattern that might have a different behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">2</td><td class="issuecontent" nowrap>To Do</td><td class="issuecontent">kmaEncodeInteger</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1069.aspx'>Error handling statement (On Error Resume Next) was converted to a pattern that might have a different behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">3</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">GetErrString</td><td class="issuecontent">ErrObject</td><td class="issuecontent">ErrorObject</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">2</td></tr>
+					<tr><td width="10" class="issuecontent">4</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">GetErrString</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">2</td></tr>
+					<tr><td width="10" class="issuecontent">5</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">GetIntegerString</td><td class="issuecontent">Long</td><td class="issuecontent">Strings</td><td class="issuecontent">Len</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Len has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">6</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">HandleErrorAndResumeNext</td><td class="issuecontent">ErrObject</td><td class="issuecontent">Information.Err</td><td class="issuecontent">Number</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>Err.Number has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">7</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaByteArrayToString</td><td class="issuecontent">String</td><td class="issuecontent">Strings</td><td class="issuecontent">StrConv</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1059.aspx'>Code was upgraded to use UpgradeHelpers.Helpers.StringsHelper.ByteArrayToString() which may not have the same behavior.</a></td><td class="issuecontent">2</td></tr>
+					<tr><td width="10" class="issuecontent">8</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaEncodeBoolean</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">9</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaEncodeBoolean</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">10</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeDate</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">11</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeDate</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">12</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaEncodeInteger</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">13</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaEncodeInteger</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">14</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeMissing</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">15</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeNumber</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">16</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeNumber</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">17</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLDate</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">18</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLDate</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">19</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLLongText</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">20</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLLongText</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">21</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLNumber</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">22</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLNumber</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">23</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLText</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">24</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">KmaEncodeSQLText</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">25</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaEncodeText</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsMissing</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2065.aspx'>Boolean method Information.IsMissing has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">26</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaEncodeText</td><td class="issuecontent">Boolean</td><td class="issuecontent">Information</td><td class="issuecontent">IsNull</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1049.aspx'>Use of Null/IsNull() detected.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">27</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">kmaStringToByteArray</td><td class="issuecontent">Long</td><td class="issuecontent">Strings</td><td class="issuecontent">LenB</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi2081.aspx'>LenB has a new behavior.</a></td><td class="issuecontent">1</td></tr>
+					<tr><td width="10" class="issuecontent">28</td><td class="issuecontent" nowrap>Runtime Warning</td><td class="issuecontent">SampleStringToByteArray</td><td class="issuecontent">String</td><td class="issuecontent">Strings</td><td class="issuecontent">StrConv</td><td class="issuecontent"><a href='http://www.vbtonet.com/ewis/ewi1059.aspx'>Code was upgraded to use UpgradeHelpers.Helpers.StringsHelper.ByteArrayToString() which may not have the same behavior.</a></td><td class="issuecontent">1</td></tr>
+				</table>
+			</td></tr>
+		<tr valign="top">
+			<td class="foot">3 File(s)</td>
+			<td class="foot">&nbsp;</td>
+			<td class="foot">Modules: 2<br>Class Modules: 1</td>
+			<td class="foot">
+		Upgraded: 3<BR>
+		Not upgraded: 0
+		</td>
+			<td class="foot">9</td>
+			<td class="foot">359</td>
+			<td class="foot">368</td>
+		</tr>
+		</table>
+		<p class="help">
+		</p>
+				<p>
+					<table class = "note">
+						<tr><td nowrap><b>Upgrade Settings</b></td></tr>
+						<tr><td nowrap><b>Log File:</b> aoCExport.log</td></tr>
+						<tr><td nowrap><b>Migrate Project To:</b> Library</td></tr>
+						<tr><td nowrap><b>Output Directory:</b> C:\Users\jay\Documents\GitHub\aoCollectionExporter\Working_.Net\Upgraded\</td></tr>
+						<tr><td nowrap><b>Output Name:</b> aoCExport.csproj</td></tr>
+						<tr><td nowrap><b>Project Name:</b> aoCExport</td></tr>
+						<tr><td nowrap><b>Project Path:</b> C:\Users\jay\Documents\GitHub\aoCollectionExporter\Working\aoCExport.vbp</td></tr>
+					</table>
+				</p>
+	</body>
+</html>
