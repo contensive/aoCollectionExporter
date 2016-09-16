@@ -1,1 +1,0 @@
-(%unit (%imports (%import "System.Runtime.InteropServices") (%import "System")) (%package "UpgradeSolution1Support.PInvoke.SafeNative" (%class "shlwapi" (%public) (%static))))

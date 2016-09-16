@@ -6,6 +6,7 @@ Imports System
 Imports System.Collections.Generic
 Imports System.Text
 Imports Contensive.BaseClasses
+Imports ICSharpCode.SharpZipLib
 
 Namespace Contensive.Addons
     '
@@ -123,7 +124,6 @@ Namespace Contensive.Addons
                 Dim CollectionID As Integer
                 Dim CollectionName As String
                 Dim CollectionFilename As String = ""
-                Dim s As String
                 '
                 ' Every form returns a button and a formid
                 '
@@ -149,7 +149,7 @@ Namespace Contensive.Addons
                             If CollectionName = "" Then
                                 Call CP.UserError.Add("The collection file you selected could not be found. Please select another.")
                             Else
-                                CollectionFilename = GetCollection(CollectionID)
+                                CollectionFilename = GetCollectionZipPathFilename(CollectionID)
                             End If
                             If Not CP.UserError.OK() Then
                                 FormID = FormIDSelectCollection
@@ -171,7 +171,7 @@ Namespace Contensive.Addons
                         '
                         'hint = hint & ",500"
                         'Call Main.testpoint("hint=" & hint)
-                        s = CP.UserError.GetList() _
+                        returnHtml = CP.UserError.GetList() _
                             & vbCrLf & vbTab & "<div class=""responseForm"">" _
                             & vbCrLf & vbTab & vbTab & "<p>Click <a href=""" & CP.Site.FilePath & Replace(CollectionFilename, "\", "/") & """>here</a> to download the collection file</p>" _
                             & vbCrLf & vbTab & "</div>"
@@ -179,19 +179,19 @@ Namespace Contensive.Addons
                         '
                         ' ask them to select a collectioin to export
                         '
-                        s = "" _
+                        returnHtml = "" _
                             & vbCrLf & vbTab & "<div class=""mainForm"">" _
                             & vbCrLf & vbTab & vbTab & CP.UserError.GetList() _
                             & vbCrLf & vbTab & vbTab & vbTab & "<p>Select a collection to be exported. If the project is being developed and you need to add an executable resource that is not installed as an add-on on this site, use the file upload.</p>" _
                             & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.SelectContent(RequestNameCollectionID, "0", "Add-on Collections") & "<br>The collection to export</p>" _
-                            & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.Button("Export Collection") & "</p>" _
+                            & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.Button("button", "Export Collection") & "</p>" _
                             & vbCrLf & vbTab & vbTab & "</form>" _
                             & vbCrLf & vbTab & "</div>"
                 End Select
                 '
-                Execute = "" _
+                returnHtml = "" _
                     & vbCrLf & vbTab & "<div class=""collectionExport"">" _
-                    & (s) _
+                    & CP.Html.Form(returnHtml) _
                     & vbCrLf & vbTab & "</div>"
             Catch ex As Exception
                 errorReport(CP, ex, "execute")
@@ -219,8 +219,8 @@ Namespace Contensive.Addons
         End Sub
         '
         '====================================================================================================
-        Private Function GetCollection(CollectionID As Integer) As String
-            GetCollection = ""
+        Private Function GetCollectionZipPathFilename(CollectionID As Integer) As String
+            Dim collectionZipPathFilename As String = ""
             Try
                 Dim IncludeSharedStyleGuidList As String
                 Dim isUpdatable As Boolean
@@ -265,7 +265,7 @@ Namespace Contensive.Addons
                 Dim Filename As String
                 Dim Path As String
                 Dim Pos As Integer
-                Dim s As String
+                Dim collectionXml As String
                 Dim Node As String
                 Dim CollectionGuid As String
                 Dim Guid As String
@@ -278,10 +278,8 @@ Namespace Contensive.Addons
                 Dim CollectionPath As String = ""
                 Dim LastChangeDate As Date
                 Dim AddonPath As String
-                Dim AddFileList As String = ""
-                Dim AddFileListFilename As String
+                Dim AddFileList As New List(Of String)
                 Dim IncludeModuleGuidList As String = ""
-                Dim Version40DLLList As String = ""
                 Dim ExecFileListNode As String = ""
                 Dim blockNavigatorNode As Boolean
                 Dim CSData As CPCSBaseClass = cp.CSNew()
@@ -312,7 +310,7 @@ Namespace Contensive.Addons
                     Else
                         blockNavigatorNode = CS.GetBoolean("blockNavigatorNode")
                     End If
-                    s = "" _
+                    collectionXml = "" _
                         & "<?xml version=""1.0"" encoding=""windows-1252""?>" _
                         & vbCrLf & "<Collection name=""" & cp.Utils.EncodeHTML(CollectionName) & """ guid=""" & CollectionGuid & """ system=""" & kmaGetYesNo(CS.GetBoolean("system")) & """ updatable=""" & kmaGetYesNo(isUpdatable) & """ blockNavigatorNode=""" & kmaGetYesNo(blockNavigatorNode) & """>"
                     '
@@ -329,9 +327,7 @@ Namespace Contensive.Addons
                     'Call Main.testpoint("getCollection, 204")
                     ArchiveFilename = ArchivePath & ArchiveFilename
                     'Call Main.testpoint("getCollection, 205")
-                    AddFileListFilename = ArchivePath & "AddFileList.txt"
-                    'Call Main.testpoint("getCollection, 206")
-                    GetCollection = "CollectionExport\" & encodeFilename(CollectionName & ".zip")
+                    collectionZipPathFilename = "CollectionExport\" & encodeFilename(CollectionName & ".zip")
                     'Call Main.testpoint("getCollection, 207")
                     '
                     ' Delete old archive file
@@ -369,13 +365,10 @@ Namespace Contensive.Addons
                                 End If
                                 If LCase(Filename) <> LCase(ManualFilename) Then
                                     AddFilename = AddonPath & CollectionPath & Filename
-                                    If InStr(1, AddFileList, "\" & Filename, vbTextCompare) <> 0 Then
-                                        Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
-                                    Else
+                                    If Not AddFileList.Contains(AddFilename) Then
+                                        AddFileList.Add(AddFilename)
                                         ExecFileListNode = ExecFileListNode & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""executable"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
-                                        AddFileList = AddFileList & vbCrLf & AddFilename
                                     End If
-                                    Version40DLLList = Version40DLLList & vbCrLf & Filename
                                 End If
                                 ResourceCnt = ResourceCnt + 1
                             End If
@@ -387,24 +380,24 @@ Namespace Contensive.Addons
                         ' If no resources were in the collection record, this might be an old installation
                         ' Add all .dll files in the CollectionPath
                         '
-                        ExecFileListNode = ExecFileListNode & AddCompatibilityResources(AddonPath & CollectionPath, ArchiveFilename, "", Version40DLLList)
+                        ExecFileListNode = ExecFileListNode & AddCompatibilityResources(AddonPath & CollectionPath, ArchiveFilename, "")
                     End If
                     '
                     ' helpLink
                     '
                     If CS.FieldOK("HelpLink") Then
-                        s = s & vbCrLf & vbTab & "<HelpLink>" & cp.Utils.EncodeHTML(CS.GetText("HelpLink")) & "</HelpLink>"
+                        collectionXml = collectionXml & vbCrLf & vbTab & "<HelpLink>" & cp.Utils.EncodeHTML(CS.GetText("HelpLink")) & "</HelpLink>"
                     End If
                     '
                     ' Help
                     '
-                    s = s & vbCrLf & vbTab & "<Help>" & cp.Utils.EncodeHTML(CS.GetText("Help")) & "</Help>"
+                    collectionXml = collectionXml & vbCrLf & vbTab & "<Help>" & cp.Utils.EncodeHTML(CS.GetText("Help")) & "</Help>"
                     '
                     ' Addons
                     '
                     CS2.Open("Add-ons", "collectionid=" & CollectionID, , , "Process")
                     Do While CS2.OK()
-                        s = s & GetAddonNode(CS2.GetInteger("id"), IncludeModuleGuidList, IncludeSharedStyleGuidList)
+                        collectionXml = collectionXml & GetAddonNode(CS2.GetInteger("id"), IncludeModuleGuidList, IncludeSharedStyleGuidList)
                         Call CS2.GoNext()
                     Loop
                     '
@@ -629,8 +622,8 @@ Namespace Contensive.Addons
                             End If
                         Next
                         If RecordNodes <> "" Then
-                            s = "" _
-                                & s _
+                            collectionXml = "" _
+                                & collectionXml _
                                 & vbCrLf & vbTab & "<data>" _
                                 & (RecordNodes) _
                                 & vbCrLf & vbTab & "</data>"
@@ -669,7 +662,7 @@ Namespace Contensive.Addons
                                 Pos = InStr(1, Node, "</cdef>", vbTextCompare)
                                 If Pos > 0 Then
                                     Node = Mid(Node, 1, Pos + 6)
-                                    s = s & vbCrLf & vbTab & Node
+                                    collectionXml = collectionXml & vbCrLf & vbTab & Node
                                 End If
                             End If
                         End If
@@ -690,7 +683,7 @@ Namespace Contensive.Addons
                                 If CS2.OK() Then
                                     Code = Trim(CS2.GetText("code"))
                                     Code = EncodeCData(Code)
-                                    s = s & vbCrLf & vbTab & "<ScriptingModule Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """ guid=""" & ModuleGuid & """>" & Code & "</ScriptingModule>"
+                                    collectionXml = collectionXml & vbCrLf & vbTab & "<ScriptingModule Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """ guid=""" & ModuleGuid & """>" & Code & "</ScriptingModule>"
                                 End If
                                 Call CS2.Close()
                             End If
@@ -708,7 +701,7 @@ Namespace Contensive.Addons
                             If recordGuid <> "" Then
                                 CS2.Open("Shared Styles", "ccguid=" & cp.Db.EncodeSQLText(recordGuid))
                                 If CS2.OK() Then
-                                    s = s & vbCrLf & vbTab & "<SharedStyle" _
+                                    collectionXml = collectionXml & vbCrLf & vbTab & "<SharedStyle" _
                                         & " Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """" _
                                         & " guid=""" & recordGuid & """" _
                                         & " alwaysInclude=""" & CS2.GetBoolean("alwaysInclude") & """" _
@@ -743,7 +736,7 @@ Namespace Contensive.Addons
                         Loop While CS3.OK()
                     End If
                     Call CS3.Close()
-                    s = s & Node
+                    collectionXml = collectionXml & Node
                     '
                     ' wwwFileList
                     '
@@ -773,11 +766,11 @@ Namespace Contensive.Addons
                                 Else
                                     PathFilename = Replace(PathFilename, "/", "\")
                                     AddFilename = PhysicalWWWPath & PathFilename
-                                    If InStr(1, AddFileList, "\" & Filename, vbTextCompare) <> 0 Then
+                                    If AddFileList.Contains(AddFilename) Then
                                         Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
                                     Else
-                                        s = s & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
-                                        AddFileList = AddFileList & vbCrLf & AddFilename
+                                        AddFileList.Add(AddFilename)
+                                        collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
                                     End If
                                     ResourceCnt = ResourceCnt + 1
                                 End If
@@ -806,11 +799,10 @@ Namespace Contensive.Addons
                                     PathFilename = Mid(PathFilename, 2)
                                 End If
                                 AddFilename = cp.Site.PhysicalFilePath & PathFilename
-                                If InStr(1, AddFileList, "\" & Filename, vbTextCompare) <> 0 Then
+                                If AddFileList.Contains(AddFilename) Then
                                     Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
                                 Else
-                                    s = s & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""content"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
-                                    AddFileList = AddFileList & vbCrLf & AddFilename
+                                    AddFileList.Add(AddFilename)
                                 End If
                                 ResourceCnt = ResourceCnt + 1
                             End If
@@ -819,32 +811,31 @@ Namespace Contensive.Addons
                     '
                     ' ExecFileListNode
                     '
-                    s = s & ExecFileListNode
+                    collectionXml = collectionXml & ExecFileListNode
                     '
                     ' Other XML
                     '
                     Dim OtherXML As String
                     OtherXML = CS.GetText("otherxml")
                     If Trim(OtherXML) <> "" Then
-                        s = s & vbCrLf & OtherXML
+                        collectionXml = collectionXml & vbCrLf & OtherXML
                     End If
-                    s = s & vbCrLf & "</Collection>"
+                    collectionXml = collectionXml & vbCrLf & "</Collection>"
                     Call CS.Close()
                     '
                     ' Save the installation file and add it to the archive
                     '
-                    Call cp.File.Save(InstallFilename, s)
-                    'Call fs.SaveFile(InstallFilename, s)
-                    If InStr(1, vbCrLf & AddFileList, vbCrLf & InstallFilename, vbTextCompare) = 0 Then
-                        AddFileList = AddFileList & vbCrLf & InstallFilename
+                    Call cp.File.Save(InstallFilename, collectionXml)
+                    If Not AddFileList.Contains(InstallFilename) Then
+                        AddFileList.Add(InstallFilename)
                     End If
-                    Call cp.File.Save(AddFileListFilename, AddFileList)
-                    Call zipFile(ArchiveFilename, AddFileListFilename)
+                    Call zipFile(ArchiveFilename, AddFileList)
                     'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
                 End If
             Catch ex As Exception
                 errorReport(cp, ex, "GetCollection")
             End Try
+            Return collectionZipPathFilename
         End Function
         '
         '====================================================================================================
@@ -1178,7 +1169,7 @@ Namespace Contensive.Addons
         End Function
         '
         '====================================================================================================
-        Friend Sub GetLocalCollectionArgs(CollectionGuid As String, Return_CollectionPath As String, Return_LastChagnedate As Date)
+        Friend Sub GetLocalCollectionArgs(CollectionGuid As String, ByRef Return_CollectionPath As String, ByRef Return_LastChagnedate As Date)
             Try
                 Const CollectionListRootNode = "collectionlist"
                 '
@@ -1217,15 +1208,15 @@ Namespace Contensive.Addons
                                                 Select Case LCase(CollectionNode.Name)
                                                     Case "name"
                                                         '
-                                                        LocalName = LCase(CollectionNode.Value)
+                                                        LocalName = LCase(CollectionNode.InnerText)
                                                     Case "guid"
                                                         '
-                                                        LocalGuid = LCase(CollectionNode.Value)
+                                                        LocalGuid = LCase(CollectionNode.InnerText)
                                                     Case "path"
                                                         '
-                                                        CollectionPath = LCase(CollectionNode.Value)
+                                                        CollectionPath = LCase(CollectionNode.InnerText)
                                                     Case "lastchangedate"
-                                                        LastChangeDate = cp.Utils.EncodeDate(CollectionNode.Value)
+                                                        LastChangeDate = cp.Utils.EncodeDate(CollectionNode.InnerText)
                                                 End Select
                                             Next
                                     End Select
@@ -1256,7 +1247,7 @@ Namespace Contensive.Addons
             Try
                 Dim AddonPath As String
                 '
-                AddonPath = cp.Site.PhysicalInstallPath & "\cclib"
+                AddonPath = cp.Site.PhysicalInstallPath & "\addons"
                 AddonPath = AddonPath & "\Collections.xml"
                 GetConfig = cp.File.Read(AddonPath)
             Catch ex As Exception
@@ -1265,7 +1256,7 @@ Namespace Contensive.Addons
         End Function
         '
         '====================================================================================================
-        Private Function AddCompatibilityResources(CollectionPath As String, ArchiveFilename As String, SubPath As String, Return_Version40DLLList As String) As String
+        Private Function AddCompatibilityResources(CollectionPath As String, ArchiveFilename As String, SubPath As String) As String
             AddCompatibilityResources = ""
             Dim s As String = ""
             Try
@@ -1293,7 +1284,7 @@ Namespace Contensive.Addons
                             FolderArgs = Split(Folders(Ptr), ",")
                             Folder = FolderArgs(0)
                             If Folder <> "" Then
-                                s = s & AddCompatibilityResources(CollectionPath, ArchiveFilename, SubPath & Folder & "\", Return_Version40DLLList)
+                                s = s & AddCompatibilityResources(CollectionPath, ArchiveFilename, SubPath & Folder & "\")
                             End If
                         End If
                     Next
@@ -1330,7 +1321,7 @@ Namespace Contensive.Addons
                                     '
                                     s = s & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""content"" path=""" & cp.Utils.EncodeHTML(SubPath) & """ />"
                                     AddFilename = CollectionPath & SubPath & "\" & Filename
-                                    Call zipFile(ArchiveFilename, AddFilename)
+                                    'Call zipFile(ArchiveFilename, AddFilename)
                                     'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                                     'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                                 ElseIf LCase(FileExt) = "dll" Then
@@ -1338,9 +1329,8 @@ Namespace Contensive.Addons
                                     ' Executable resources
                                     '
                                     s = s & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""executable"" path=""" & cp.Utils.EncodeHTML(SubPath) & """ />"
-                                    Return_Version40DLLList = Return_Version40DLLList & vbCrLf & Filename
                                     AddFilename = CollectionPath & SubPath & "\" & Filename
-                                    Call zipFile(ArchiveFilename, AddFilename)
+                                    'Call zipFile(ArchiveFilename, AddFilename)
                                     'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                                     'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                                 Else
@@ -1349,7 +1339,7 @@ Namespace Contensive.Addons
                                     '
                                     s = s & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(SubPath) & """ />"
                                     AddFilename = CollectionPath & SubPath & "\" & Filename
-                                    Call zipFile(ArchiveFilename, AddFilename)
+                                    'Call zipFile(ArchiveFilename, AddFilename)
                                     'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                                     'Call Remote.executeCmd("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable(AddFilename))
                                 End If
@@ -1411,16 +1401,34 @@ Namespace Contensive.Addons
         ''' <param name="archivePathFilename"></param>
         ''' <param name="addPathFilename"></param>
         ''' <remarks></remarks>
-        Public Sub zipFile(archivePathFilename As String, ByVal addPathFilename As String)
+        Public Sub zipFile(archivePathFilename As String, ByVal addPathFilename As List(Of String))
             Try
                 '
-                Dim fastZip As ICSharpCode.SharpZipLib.Zip.FastZip = New ICSharpCode.SharpZipLib.Zip.FastZip()
-                Dim fileFilter As String = Nothing
-                Dim recurse As Boolean = True
-                Dim archivepath As String = getPath(archivePathFilename)
-                Dim archiveFilename As String = GetFilename(archivePathFilename)
+                'Dim fastZip As FastZip = New ICSharpCode.SharpZipLib.Zip.FastZip()
+                'Dim fileFilter As String = Nothing
+                'Dim recurse As Boolean = True
+                'Dim archivepath As String = getPath(archivePathFilename)
+                'Dim archiveFilename As String = GetFilename(archivePathFilename)
                 '
-                fastZip.CreateZip(archivePathFilename, addPathFilename, recurse, fileFilter)
+                Dim z As Zip.ZipFile
+                If cp.File.fileExists(archivePathFilename) Then
+                    '
+                    ' update existing zip with list of files
+                    '
+                    z = New Zip.ZipFile(archivePathFilename)
+                Else
+                    '
+                    ' create new zip
+                    '
+                    z = Zip.ZipFile.Create(archivePathFilename)
+                End If
+                z.BeginUpdate()
+                For Each pathFilename In addPathFilename
+                    z.Add(pathFilename, System.IO.Path.GetFileName(pathFilename))
+                Next
+                z.CommitUpdate()
+                z.Close()
+                'fastZip.CreateZip(archivePathFilename, addPathFilename, recurse, fileFilter)
             Catch ex As Exception
                 errorReport(cp, ex, "zipFile")
             End Try
