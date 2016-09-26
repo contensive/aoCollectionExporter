@@ -238,8 +238,7 @@ Namespace Contensive.Addons
                             AuthoringTableID = (csContent.GetInteger("AuthoringTableID"))
                             TableName = ""
                             DataSourceName = ""
-
-                            If AuthoringTableID <> 0 Then
+                            If (tables.ContainsKey(AuthoringTableID)) Then
                                 TableName = tables(AuthoringTableID).tableName
                                 DataSourceName = tables(AuthoringTableID).dataSourceName
                             End If
@@ -255,29 +254,42 @@ Namespace Contensive.Addons
                             ContentTableID = (csContent.GetInteger("ContentTableID"))
                             If ContentTableID <> AuthoringTableID Then
                                 If ContentTableID <> 0 Then
-                                    TableName = tables(ContentTableID).tableName
-                                    DataSourceName = tables(ContentTableID).dataSourceName
-                                    If DataSourceName = "" Then
-                                        DataSourceName = "Default"
+                                    TableName = ""
+                                    DataSourceName = ""
+                                    If (tables.ContainsKey(ContentTableID)) Then
+                                        TableName = tables(ContentTableID).tableName
+                                        DataSourceName = tables(ContentTableID).dataSourceName
+                                        If DataSourceName = "" Then
+                                            DataSourceName = "Default"
+                                        End If
                                     End If
                                 End If
                             End If
                             sb.Append(" ContentDataSourceName=""" & EncodeXMLattribute(DataSourceName) & """")
                             sb.Append(" ContentTableName=""" & EncodeXMLattribute(TableName) & """")
                             '
+                            DefaultSortMethod = ""
                             DefaultSortMethodID = (csContent.GetInteger("DefaultSortMethodID"))
-                            DefaultSortMethod = sorts(DefaultSortMethodID)
+                            If (sorts.ContainsKey(DefaultSortMethodID)) Then
+                                DefaultSortMethod = sorts(DefaultSortMethodID)
+                            End If
                             sb.Append(" DefaultSortMethod=""" & EncodeXMLattribute(DefaultSortMethod) & """")
                             '
                             sb.Append(" DeveloperOnly=""" & GetRSXMLAttribute(csContent, "DeveloperOnly") & """")
                             sb.Append(" DropDownFieldList=""" & GetRSXMLAttribute(csContent, "DropDownFieldList") & """")
                             '
+                            EditorGroupName = ""
                             EditorGroupID = (csContent.GetInteger("EditorGroupID"))
-                            EditorGroupName = groups(EditorGroupID)
+                            If (groups.ContainsKey(EditorGroupID)) Then
+                                EditorGroupName = groups(EditorGroupID)
+                            End If
                             sb.Append(" EditorGroupName=""" & EncodeXMLattribute(EditorGroupName) & """")
                             '
+                            ParentName = ""
                             ParentID = (csContent.GetInteger("ParentID"))
-                            ParentName = contents(ParentID)
+                            If (contents.ContainsKey(ParentID)) Then
+                                ParentName = contents(ParentID)
+                            End If
                             sb.Append(" Parent=""" & EncodeXMLattribute(ParentName) & """")
                             '
                             sb.Append(" IconLink=""" & GetRSXMLAttribute(csContent, "IconLink") & """")
@@ -369,20 +381,32 @@ Namespace Contensive.Addons
                                             sb.Append(" IsBaseField=""" & CFields.GetBoolean("IsBaseField") & """")
                                         End If
                                         '
+                                        RecordName = ""
                                         RecordID = CFields.GetInteger("LookupContentID")
-                                        RecordName = contents(RecordID)
+                                        If (contents.ContainsKey(RecordID)) Then
+                                            RecordName = contents(RecordID)
+                                        End If
                                         sb.Append(" LookupContent=""" & cp.Utils.EncodeHTML(RecordName) & """")
                                         '
+                                        RecordName = ""
                                         RecordID = CFields.GetInteger("RedirectContentID")
-                                        RecordName = contents(RecordID)
+                                        If (contents.ContainsKey(RecordID)) Then
+                                            RecordName = contents(RecordID)
+                                        End If
                                         sb.Append(" RedirectContent=""" & cp.Utils.EncodeHTML(RecordName) & """")
                                         '
+                                        RecordName = ""
                                         RecordID = CFields.GetInteger("ManyToManyContentID")
-                                        RecordName = contents(RecordID)
+                                        If (contents.ContainsKey(RecordID)) Then
+                                            RecordName = contents(RecordID)
+                                        End If
                                         sb.Append(" ManyToManyContent=""" & cp.Utils.EncodeHTML(RecordName) & """")
                                         '
+                                        RecordName = ""
                                         RecordID = CFields.GetInteger("ManyToManyRuleContentID")
-                                        RecordName = contents(RecordID)
+                                        If (contents.ContainsKey(RecordID)) Then
+                                            RecordName = contents(RecordID)
+                                        End If
                                         sb.Append(" ManyToManyRuleContent=""" & cp.Utils.EncodeHTML(RecordName) & """")
                                         '
                                         sb.Append(" >")
@@ -393,7 +417,7 @@ Namespace Contensive.Addons
                                             HelpDefault = CFields.GetText("helpdefault")
                                         End If
                                         If HelpDefault <> "" Then
-                                            sb.Append(vbCrLf & vbTab & vbTab & vbTab & "<HelpDefault>" & HelpDefault & "</HelpDefault>")
+                                            sb.Append(vbCrLf & vbTab & vbTab & vbTab & "<HelpDefault>" & EncodeCData(HelpDefault) & "</HelpDefault>")
                                             HelpCnt = HelpCnt + 1
                                         End If
                                         '                            HelpCustom = cfields.getText("helpcustom")
@@ -855,6 +879,19 @@ Namespace Contensive.Addons
                 End Select
             Catch ex As Exception
                 cp.Site.ErrorReport(ex, "GetXMLContentDefinition3")
+            End Try
+        End Function
+        '
+        '====================================================================================================
+        Private Function EncodeCData(Source As String) As String
+            EncodeCData = ""
+            Try
+                EncodeCData = Source
+                If EncodeCData <> "" Then
+                    EncodeCData = "<![CDATA[" & Replace(EncodeCData, "]]>", "]]]]><![CDATA[>") & "]]>"
+                End If
+            Catch ex As Exception
+                cp.Site.ErrorReport(ex, "EncodeCData")
             End Try
         End Function
     End Class

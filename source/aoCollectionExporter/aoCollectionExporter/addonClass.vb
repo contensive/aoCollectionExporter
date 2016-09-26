@@ -489,13 +489,13 @@ Namespace Contensive.Addons
                                                     If FieldName <> "" Then
                                                         FieldLookupContentID = 0
                                                         FieldLookupContentName = ""
-                                                        FieldTypeNumber = CS.GetInteger("type")
+                                                        FieldTypeNumber = csFields.GetInteger("type")
                                                         Select Case LCase(FieldName)
                                                             Case "ccguid", "name", "id", "dateadded", "createdby", "modifiedby", "modifieddate", "createkey", "contentcontrolid", "editsourceid", "editarchive", "editblank", "contentcategoryid"
                                                             Case Else
                                                                 If FieldTypeNumber = 7 Then
-                                                                    FieldLookupContentID = CS.GetInteger("Lookupcontentid")
-                                                                    fieldLookupListValue = CS.GetText("LookupList")
+                                                                    FieldLookupContentID = csFields.GetInteger("Lookupcontentid")
+                                                                    fieldLookupListValue = csFields.GetText("LookupList")
                                                                     If FieldLookupContentID <> 0 Then
                                                                         FieldLookupContentName = cp.Content.GetRecordName("content", FieldLookupContentID)
                                                                     End If
@@ -521,7 +521,7 @@ Namespace Contensive.Addons
                                                         End Select
                                                     End If
                                                     Call csFields.GoNext()
-                                                Loop While CS.OK()
+                                                Loop While csFields.OK()
                                             End If
                                             Call csFields.Close()
                                             '
@@ -611,7 +611,7 @@ Namespace Contensive.Addons
                                                 RecordNodes = "" _
                                                     & RecordNodes _
                                                     & vbCrLf & vbTab & "<record content=""" & cp.Utils.EncodeHTML(DataContentName) & """ guid=""" & DataRecordGuid & """ name=""" & cp.Utils.EncodeHTML(DataRecordName) & """>" _
-                                                    & (FieldNodes) _
+                                                    & tabIndent(FieldNodes) _
                                                     & vbCrLf & vbTab & "</record>"
                                                 Call CSData.GoNext()
                                             Loop
@@ -625,7 +625,7 @@ Namespace Contensive.Addons
                             collectionXml = "" _
                                 & collectionXml _
                                 & vbCrLf & vbTab & "<data>" _
-                                & (RecordNodes) _
+                                & tabIndent(RecordNodes) _
                                 & vbCrLf & vbTab & "</data>"
                         End If
                     End If
@@ -1068,7 +1068,7 @@ Namespace Contensive.Addons
                     End If
                     s = "" _
                     & vbCrLf & vbTab & "<Addon name=""" & cp.Utils.EncodeHTML(addonName) & """ guid=""" & Guid & """ type=""" & NavType & """>" _
-                    & (s) _
+                    & tabIndent(s) _
                     & vbCrLf & vbTab & "</Addon>"
                 End If
                 Call CS.Close()
@@ -1355,7 +1355,7 @@ Namespace Contensive.Addons
         End Function
         '
         '====================================================================================================
-        Private Function EncodeCData(Source As String) As String
+        Friend Function EncodeCData(Source As String) As String
             EncodeCData = ""
             Try
                 EncodeCData = Source
@@ -1459,5 +1459,64 @@ Namespace Contensive.Addons
                 GetFilename = Mid(GetFilename, Position + 1)
             End If
         End Function
+        '
+        '=======================================================================================
+        '
+        '   Indent every line by 1 tab
+        '
+        Public Function tabIndent(Source As String) As String
+            Dim posStart As Integer
+            Dim posEnd As Integer
+            Dim pre As String
+            Dim post As String
+            Dim target As String
+            '
+            posStart = InStr(1, Source, "<![CDATA[", CompareMethod.Text)
+            If posStart = 0 Then
+                '
+                ' no cdata
+                '
+                posStart = InStr(1, Source, "<textarea", CompareMethod.Text)
+                If posStart = 0 Then
+                    '
+                    ' no textarea
+                    '
+                    tabIndent = Replace(Source, vbCrLf & vbTab, vbCrLf & vbTab & vbTab)
+                Else
+                    '
+                    ' text area found, isolate it and indent before and after
+                    '
+                    posEnd = InStr(posStart, Source, "</textarea>", CompareMethod.Text)
+                    pre = Mid(Source, 1, posStart - 1)
+                    If posEnd = 0 Then
+                        target = Mid(Source, posStart)
+                        post = ""
+                    Else
+                        target = Mid(Source, posStart, posEnd - posStart + Len("</textarea>"))
+                        post = Mid(Source, posEnd + Len("</textarea>"))
+                    End If
+                    tabIndent = tabIndent(pre) & target & tabIndent(post)
+                End If
+            Else
+                '
+                ' cdata found, isolate it and indent before and after
+                '
+                posEnd = InStr(posStart, Source, "]]>", CompareMethod.Text)
+                pre = Mid(Source, 1, posStart - 1)
+                If posEnd = 0 Then
+                    target = Mid(Source, posStart)
+                    post = ""
+                Else
+                    target = Mid(Source, posStart, posEnd - posStart + Len("]]>"))
+                    post = Mid(Source, posEnd + 3)
+                End If
+                tabIndent = tabIndent(pre) & target & tabIndent(post)
+            End If
+            '    kmaIndent = Source
+            '    If InStr(1, kmaIndent, "<textarea", vbTextCompare) = 0 Then
+            '        kmaIndent = Replace(Source, vbCrLf & vbTab, vbCrLf & vbTab & vbTab)
+            '    End If
+        End Function
+
     End Class
 End Namespace

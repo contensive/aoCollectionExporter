@@ -2,39 +2,40 @@
 <Collection name="Collection Exporter" guid="{156B8F61-CEB9-4CD4-A768-C108EDD785DA}" system="No" updatable="Yes" blockNavigatorNode="No">
 	<Help></Help>
 	<Addon name="Collection Exporter" guid="{F3A59121-80C4-40AE-B8D8-135E658957C6}" type="Tool">
-	<Copy></Copy>
-	<CopyText></CopyText>
-	<ActiveXProgramID></ActiveXProgramID>
-	<DotNetClass><![CDATA[Contensive.Addons.aoCollectionExporterClass]]></DotNetClass>
-	<ArgumentList></ArgumentList>
-	<AsAjax>No</AsAjax>
-	<Filter>No</Filter>
-	<Help></Help>
-	<HelpLink></HelpLink>
-	<Icon Link="" width="0" height="0" sprites="0" />
-	<InIframe>No</InIframe>
-	<BlockEditTools>No</BlockEditTools>
-	<FormXML></FormXML>
-	<IsInline>No</IsInline>
-	<JavascriptOnLoad></JavascriptOnLoad>
-	<JavascriptInHead></JavascriptInHead>
-	<JavascriptBodyEnd></JavascriptBodyEnd>
-	<MetaDescription></MetaDescription>
-	<OtherHeadTags></OtherHeadTags>
-	<Content>No</Content>
-	<Template>No</Template>
-	<Email>No</Email>
-	<Admin>Yes</Admin>
-	<OnPageEndEvent>No</OnPageEndEvent>
-	<OnPageStartEvent>No</OnPageStartEvent>
-	<OnBodyStart>No</OnBodyStart>
-	<OnBodyEnd>No</OnBodyEnd>
-	<RemoteMethod>No</RemoteMethod>
-	<ProcessRunOnce>No</ProcessRunOnce>
-	<ProcessInterval>0</ProcessInterval>
-	<PageTitle></PageTitle>
-	<RemoteAssetLink></RemoteAssetLink>
-	<Styles><![CDATA[		.collectionExport{
+		<Copy></Copy>
+		<CopyText></CopyText>
+		<ActiveXProgramID></ActiveXProgramID>
+		<DotNetClass><![CDATA[Contensive.Addons.aoCollectionExporterClass]]></DotNetClass>
+		<ArgumentList></ArgumentList>
+		<AsAjax>No</AsAjax>
+		<Filter>No</Filter>
+		<Help></Help>
+		<HelpLink></HelpLink>
+		<Icon Link="" width="0" height="0" sprites="0" />
+		<InIframe>No</InIframe>
+		<BlockEditTools>No</BlockEditTools>
+		<FormXML></FormXML>
+		<IsInline>No</IsInline>
+		<JavascriptOnLoad></JavascriptOnLoad>
+		<JavascriptInHead></JavascriptInHead>
+		<JavascriptBodyEnd></JavascriptBodyEnd>
+		<MetaDescription></MetaDescription>
+		<OtherHeadTags></OtherHeadTags>
+		<Content>No</Content>
+		<Template>No</Template>
+		<Email>No</Email>
+		<Admin>Yes</Admin>
+		<OnPageEndEvent>No</OnPageEndEvent>
+		<OnPageStartEvent>No</OnPageStartEvent>
+		<OnBodyStart>No</OnBodyStart>
+		<OnBodyEnd>No</OnBodyEnd>
+		<RemoteMethod>No</RemoteMethod>
+		<ProcessRunOnce>No</ProcessRunOnce>
+		<ProcessInterval>0</ProcessInterval>
+		<PageTitle></PageTitle>
+		<RemoteAssetLink></RemoteAssetLink>
+		<Styles><![CDATA[
+		.collectionExport{
 			padding-top:20px;
 		}
 		.collectionExport .mainForm {
@@ -100,7 +101,6 @@
 
 
 ]]></Styles>
-	<Scripting Language="" EntryPoint="" Timeout="5000"/>
+		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
-	<Resource name="aocexport.dll" type="executable" path="" />
 </Collection>
