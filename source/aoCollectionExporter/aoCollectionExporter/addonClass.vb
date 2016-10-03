@@ -395,7 +395,7 @@ Namespace Contensive.Addons
                     '
                     ' Addons
                     '
-                    CS2.Open("Add-ons", "collectionid=" & CollectionID, , , "Process")
+                    CS2.Open("Add-ons", "collectionid=" & CollectionID, , , "id")
                     Do While CS2.OK()
                         collectionXml = collectionXml & GetAddonNode(CS2.GetInteger("id"), IncludeModuleGuidList, IncludeSharedStyleGuidList)
                         Call CS2.GoNext()
