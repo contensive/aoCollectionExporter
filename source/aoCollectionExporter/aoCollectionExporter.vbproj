@@ -11,7 +11,7 @@
     </RootNamespace>
     <AssemblyName>aoCollectionExporter</AssemblyName>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -68,8 +68,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CPBase">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\kma\Contensive\CPBase.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\Contensive50\source\cpBase\bin\x86\Debug\CPBase.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
