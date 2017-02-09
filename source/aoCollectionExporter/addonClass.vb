@@ -219,6 +219,12 @@ Namespace Contensive.Addons
         End Sub
         '
         '====================================================================================================
+        ''' <summary>
+        ''' Create the collection file and return a filepath to the zip
+        ''' </summary>
+        ''' <param name="CollectionID"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
         Private Function GetCollectionZipPathFilename(CollectionID As Integer) As String
             Dim collectionZipPathFilename As String = ""
             Try
@@ -300,16 +306,8 @@ Namespace Contensive.Addons
                         Call CS.SetField("ccGuid", CollectionGuid)
                     End If
                     CollectionName = CS.GetText("name")
-                    If Not CS.FieldOK("updatable") Then
-                        isUpdatable = True
-                    Else
-                        isUpdatable = CS.GetBoolean("updatable")
-                    End If
-                    If Not CS.FieldOK("blockNavigatorNode") Then
-                        blockNavigatorNode = False
-                    Else
-                        blockNavigatorNode = CS.GetBoolean("blockNavigatorNode")
-                    End If
+                    isUpdatable = CS.GetBoolean("updatable")
+                    blockNavigatorNode = CS.GetBoolean("blockNavigatorNode")
                     collectionXml = "" _
                         & "<?xml version=""1.0"" encoding=""windows-1252""?>" _
                         & vbCrLf & "<Collection name=""" & cp.Utils.EncodeHTML(CollectionName) & """ guid=""" & CollectionGuid & """ system=""" & kmaGetYesNo(CS.GetBoolean("system")) & """ updatable=""" & kmaGetYesNo(isUpdatable) & """ blockNavigatorNode=""" & kmaGetYesNo(blockNavigatorNode) & """>"
@@ -385,9 +383,8 @@ Namespace Contensive.Addons
                     '
                     ' helpLink
                     '
-                    If CS.FieldOK("HelpLink") Then
-                        collectionXml = collectionXml & vbCrLf & vbTab & "<HelpLink>" & cp.Utils.EncodeHTML(CS.GetText("HelpLink")) & "</HelpLink>"
-                    End If
+                    Dim HelpLink As String = CS.GetText("HelpLink")
+                    collectionXml = collectionXml & vbCrLf & vbTab & "<HelpLink>" & cp.Utils.EncodeHTML(HelpLink) & "</HelpLink>"
                     '
                     ' Help
                     '
