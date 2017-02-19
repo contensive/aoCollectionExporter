@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Collection name="Collection Exporter" guid="{156B8F61-CEB9-4CD4-A768-C108EDD785DA}" system="No" updatable="Yes" blockNavigatorNode="No">
+	<HelpLink></HelpLink>
 	<Help></Help>
 	<Addon name="Collection Exporter" guid="{F3A59121-80C4-40AE-B8D8-135E658957C6}" type="Tool">
 		<Copy></Copy>
@@ -35,6 +36,7 @@
 		<PageTitle></PageTitle>
 		<RemoteAssetLink></RemoteAssetLink>
 		<Styles><![CDATA[
+
 		.collectionExport{
 			padding-top:20px;
 		}
@@ -103,4 +105,6 @@
 ]]></Styles>
 		<Scripting Language="" EntryPoint="" Timeout="5000"/>
 	</Addon>
+	<Resource name="aocollectionexporter.dll" type="executable" path="" />
+	<Resource name="icsharpcode.sharpziplib.dll" type="executable" path="" />
 </Collection>

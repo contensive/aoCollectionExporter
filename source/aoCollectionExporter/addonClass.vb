@@ -9,17 +9,11 @@ Imports Contensive.BaseClasses
 Imports ICSharpCode.SharpZipLib
 
 Namespace Contensive.Addons
-    '
-    ' Sample Vb addon
-    '
     Public Class aoCollectionExporterClass
         Inherits AddonBaseClass
         '
-        ' - update references to your installed version of cpBase
-        ' - Edit project - under application, verify root name space is empty
-        ' - Change the namespace in this file to the collection name
-        ' - Change this class name to the addon name
-        ' - Create a Contensive Addon record, set the dotnet class full name to yourNameSpaceName.yourClassName
+        '====================================================================================================
+        ' instance store
         '
         Private cp As CPBaseClass
         '
@@ -210,7 +204,7 @@ Namespace Contensive.Addons
         ''' <remarks></remarks>
         Private Sub errorReport(ByVal cp As CPBaseClass, ByVal ex As Exception, ByVal method As String)
             Try
-                cp.Site.ErrorReport(ex, "Unexpected error in sampleClass." & method)
+                cp.Site.ErrorReport(ex, "Unexpected error in aoEollectionExportClass." & method)
             Catch exLost As Exception
                 '
                 ' stop anything thrown from cp errorReport
@@ -1421,7 +1415,12 @@ Namespace Contensive.Addons
                 End If
                 z.BeginUpdate()
                 For Each pathFilename In addPathFilename
-                    z.Add(pathFilename, System.IO.Path.GetFileName(pathFilename))
+                    If Not cp.File.fileExists(pathFilename) Then
+                        ' -- should report this back to user
+                        cp.UserError.Add("During export, this file was included in the collections file list, but was not found on the server. Either remove it from the resources tab of the collection record, or add it to the addons folder. [" & pathFilename & "]")
+                    Else
+                        z.Add(pathFilename, System.IO.Path.GetFileName(pathFilename))
+                    End If
                 Next
                 z.CommitUpdate()
                 z.Close()
