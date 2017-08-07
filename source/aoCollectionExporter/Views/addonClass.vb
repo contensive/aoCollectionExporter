@@ -6,6 +6,7 @@ Imports System
 Imports System.Collections.Generic
 Imports System.Text
 Imports Contensive.BaseClasses
+Imports Contensive.Addons.aoCollectionExporter
 Imports ICSharpCode.SharpZipLib
 
 Namespace Contensive.Addons
@@ -16,90 +17,6 @@ Namespace Contensive.Addons
         ' instance store
         '
         Private cp As CPBaseClass
-        '
-        Const FormIDSelectCollection As Integer = 0
-        Const FormIDDisplayResults As Integer = 1
-        '
-        Const RequestNameButton As String = "button"
-        Const RequestNameFormID As String = "formid"
-        Const RequestnameExecutableFile As String = "executablefile"
-        Const RequestNameCollectionID As String = "collectionid"
-        '
-        '
-        '-----------------------------------------------------------------------
-        ' ----- Field type Definitions
-        '       Field Types are numeric values that describe how to treat values
-        '       stored as ContentFieldDefinitionType (FieldType property of FieldType Type.. ;)
-        '-----------------------------------------------------------------------
-        '
-        Public Const FieldTypeInteger As Integer = 1       ' An long number
-        Public Const FieldTypeText As Integer = 2          ' A text field (up to 255 characters)
-        Public Const FieldTypeLongText As Integer = 3      ' A memo field (up to 8000 characters)
-        Public Const FieldTypeBoolean As Integer = 4       ' A yes/no field
-        Public Const FieldTypeDate As Integer = 5          ' A date field
-        Public Const FieldTypeFile As Integer = 6          ' A filename of a file in the files directory.
-        Public Const FieldTypeLookup As Integer = 7        ' A lookup is a FieldTypeInteger that indexes into another table
-        Public Const FieldTypeRedirect As Integer = 8      ' creates a link to another section
-        Public Const FieldTypeCurrency As Integer = 9      ' A Float that prints in dollars
-        Public Const FieldTypeTextFile As Integer = 10     ' Text saved in a file in the files area.
-        Public Const FieldTypeImage As Integer = 11        ' A filename of a file in the files directory.
-        Public Const FieldTypeFloat As Integer = 12        ' A float number
-        Public Const FieldTypeAutoIncrement As Integer = 13 'long that automatically increments with the new record
-        Public Const FieldTypeManyToMany As Integer = 14    ' no database field - sets up a relationship through a Rule table to another table
-        Public Const FieldTypeMemberSelect As Integer = 15 ' This ID is a ccMembers record in a group defined by the MemberSelectGroupID field
-        Public Const FieldTypeCSSFile As Integer = 16      ' A filename of a CSS compatible file
-        Public Const FieldTypeXMLFile As Integer = 17      ' the filename of an XML compatible file
-        Public Const FieldTypeJavascriptFile As Integer = 18 ' the filename of a javascript compatible file
-        Public Const FieldTypeLink As Integer = 19           ' Links used in href tags -- can go to pages or resources
-        Public Const FieldTypeResourceLink As Integer = 20   ' Links used in resources, link <img or <object. Should not be pages
-        Public Const FieldTypeHTML As Integer = 21           ' LongText field that expects HTML content
-        Public Const FieldTypeHTMLFile As Integer = 22       ' TextFile field that expects HTML content
-        Public Const FieldTypeMax As Integer = 22
-        '
-        '
-        Public Const FieldDescriptorInteger = "Integer"
-        Public Const FieldDescriptorText = "Text"
-        Public Const FieldDescriptorLongText = "LongText"
-        Public Const FieldDescriptorBoolean = "Boolean"
-        Public Const FieldDescriptorDate = "Date"
-        Public Const FieldDescriptorFile = "File"
-        Public Const FieldDescriptorLookup = "Lookup"
-        Public Const FieldDescriptorRedirect = "Redirect"
-        Public Const FieldDescriptorCurrency = "Currency"
-        Public Const FieldDescriptorImage = "Image"
-        Public Const FieldDescriptorFloat = "Float"
-        Public Const FieldDescriptorManyToMany = "ManyToMany"
-        Public Const FieldDescriptorTextFile = "TextFile"
-        Public Const FieldDescriptorCSSFile = "CSSFile"
-        Public Const FieldDescriptorXMLFile = "XMLFile"
-        Public Const FieldDescriptorJavascriptFile = "JavascriptFile"
-        Public Const FieldDescriptorLink = "Link"
-        Public Const FieldDescriptorResourceLink = "ResourceLink"
-        Public Const FieldDescriptorMemberSelect = "MemberSelect"
-        Public Const FieldDescriptorHTML = "HTML"
-        Public Const FieldDescriptorHTMLFile = "HTMLFile"
-        '
-        Public Const FieldDescriptorLcaseInteger = "integer"
-        Public Const FieldDescriptorLcaseText = "text"
-        Public Const FieldDescriptorLcaseLongText = "longtext"
-        Public Const FieldDescriptorLcaseBoolean = "boolean"
-        Public Const FieldDescriptorLcaseDate = "date"
-        Public Const FieldDescriptorLcaseFile = "file"
-        Public Const FieldDescriptorLcaseLookup = "lookup"
-        Public Const FieldDescriptorLcaseRedirect = "redirect"
-        Public Const FieldDescriptorLcaseCurrency = "currency"
-        Public Const FieldDescriptorLcaseImage = "image"
-        Public Const FieldDescriptorLcaseFloat = "float"
-        Public Const FieldDescriptorLcaseManyToMany = "manytomany"
-        Public Const FieldDescriptorLcaseTextFile = "textfile"
-        Public Const FieldDescriptorLcaseCSSFile = "cssfile"
-        Public Const FieldDescriptorLcaseXMLFile = "xmlfile"
-        Public Const FieldDescriptorLcaseJavascriptFile = "javascriptfile"
-        Public Const FieldDescriptorLcaseLink = "link"
-        Public Const FieldDescriptorLcaseResourceLink = "resourcelink"
-        Public Const FieldDescriptorLcaseMemberSelect = "memberselect"
-        Public Const FieldDescriptorLcaseHTML = "html"
-        Public Const FieldDescriptorLcaseHTMLFile = "htmlfile"
         '
         '====================================================================================================
         ''' <summary>
@@ -112,7 +29,7 @@ Namespace Contensive.Addons
             Dim returnHtml As String = ""
             Try
                 Me.cp = CP
-                '
+                Dim siteContext As New siteContextClass(CP)
                 Dim Button As String
                 Dim FormID As Integer
                 Dim CollectionID As Integer
@@ -386,7 +303,7 @@ Namespace Contensive.Addons
                     '
                     ' Addons
                     '
-                    CS2.Open("Add-ons", "collectionid=" & CollectionID, , , "id")
+                    CS2.Open("Add-ons", "collectionid=" & CollectionID, , , "ccguid")
                     Do While CS2.OK()
                         collectionXml = collectionXml & GetAddonNode(CS2.GetInteger("id"), IncludeModuleGuidList, IncludeSharedStyleGuidList)
                         Call CS2.GoNext()
@@ -683,29 +600,31 @@ Namespace Contensive.Addons
                     '
                     ' shared styles
                     '
-                    Dim recordGuids() As String
-                    Dim recordGuid As String
-                    If (IncludeSharedStyleGuidList <> "") Then
-                        recordGuids = Split(IncludeSharedStyleGuidList, vbCrLf)
-                        For Ptr = 0 To UBound(recordGuids)
-                            recordGuid = recordGuids(Ptr)
-                            If recordGuid <> "" Then
-                                CS2.Open("Shared Styles", "ccguid=" & cp.Db.EncodeSQLText(recordGuid))
-                                If CS2.OK() Then
-                                    collectionXml = collectionXml & vbCrLf & vbTab & "<SharedStyle" _
-                                        & " Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """" _
-                                        & " guid=""" & recordGuid & """" _
-                                        & " alwaysInclude=""" & CS2.GetBoolean("alwaysInclude") & """" _
-                                        & " prefix=""" & cp.Utils.EncodeHTML(CS2.GetText("prefix")) & """" _
-                                        & " suffix=""" & cp.Utils.EncodeHTML(CS2.GetText("suffix")) & """" _
-                                        & " sortOrder=""" & cp.Utils.EncodeHTML(CS2.GetText("sortOrder")) & """" _
-                                        & ">" _
-                                        & EncodeCData(Trim(CS2.GetText("styleFilename"))) _
-                                        & "</SharedStyle>"
+                    If (cp.Version < "5") Then
+                        Dim recordGuids() As String
+                        Dim recordGuid As String
+                        If (IncludeSharedStyleGuidList <> "") Then
+                            recordGuids = Split(IncludeSharedStyleGuidList, vbCrLf)
+                            For Ptr = 0 To UBound(recordGuids)
+                                recordGuid = recordGuids(Ptr)
+                                If recordGuid <> "" Then
+                                    CS2.Open("Shared Styles", "ccguid=" & cp.Db.EncodeSQLText(recordGuid))
+                                    If CS2.OK() Then
+                                        collectionXml = collectionXml & vbCrLf & vbTab & "<SharedStyle" _
+                                            & " Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """" _
+                                            & " guid=""" & recordGuid & """" _
+                                            & " alwaysInclude=""" & CS2.GetBoolean("alwaysInclude") & """" _
+                                            & " prefix=""" & cp.Utils.EncodeHTML(CS2.GetText("prefix")) & """" _
+                                            & " suffix=""" & cp.Utils.EncodeHTML(CS2.GetText("suffix")) & """" _
+                                            & " sortOrder=""" & cp.Utils.EncodeHTML(CS2.GetText("sortOrder")) & """" _
+                                            & ">" _
+                                            & EncodeCData(Trim(CS2.GetText("styleFilename"))) _
+                                            & "</SharedStyle>"
+                                    End If
+                                    Call CS2.Close()
                                 End If
-                                Call CS2.Close()
-                            End If
-                        Next
+                            Next
+                        End If
                     End If
                     '
                     ' Import Collections
@@ -727,102 +646,102 @@ Namespace Contensive.Addons
                         Loop While CS3.OK()
                     End If
                     Call CS3.Close()
-                    collectionXml = collectionXml & Node
-                    '
-                    ' wwwFileList
-                    '
-                    ResourceCnt = 0
-                    FileList = CS.GetText("wwwFileList")
-                    If FileList <> "" Then
-                        PhysicalWWWPath = cp.Site.PhysicalWWWPath
-                        If Right(PhysicalWWWPath, 1) <> "\" Then
-                            PhysicalWWWPath = PhysicalWWWPath & "\"
-                        End If
-                        Files = Split(FileList, vbCrLf)
-                        For Ptr = 0 To UBound(Files)
-                            PathFilename = Files(Ptr)
-                            If PathFilename <> "" Then
-                                PathFilename = Replace(PathFilename, "\", "/")
-                                Path = ""
-                                Filename = PathFilename
-                                Pos = InStrRev(PathFilename, "/")
-                                If Pos > 0 Then
-                                    Filename = Mid(PathFilename, Pos + 1)
-                                    Path = Mid(PathFilename, 1, Pos - 1)
+                        collectionXml = collectionXml & Node
+                        '
+                        ' wwwFileList
+                        '
+                        ResourceCnt = 0
+                        FileList = CS.GetText("wwwFileList")
+                        If FileList <> "" Then
+                            PhysicalWWWPath = cp.Site.PhysicalWWWPath
+                            If Right(PhysicalWWWPath, 1) <> "\" Then
+                                PhysicalWWWPath = PhysicalWWWPath & "\"
+                            End If
+                            Files = Split(FileList, vbCrLf)
+                            For Ptr = 0 To UBound(Files)
+                                PathFilename = Files(Ptr)
+                                If PathFilename <> "" Then
+                                    PathFilename = Replace(PathFilename, "\", "/")
+                                    Path = ""
+                                    Filename = PathFilename
+                                    Pos = InStrRev(PathFilename, "/")
+                                    If Pos > 0 Then
+                                        Filename = Mid(PathFilename, Pos + 1)
+                                        Path = Mid(PathFilename, 1, Pos - 1)
+                                    End If
+                                    If LCase(Filename) = "collection.hlp" Then
+                                        '
+                                        ' legacy file, remove it
+                                        '
+                                    Else
+                                        PathFilename = Replace(PathFilename, "/", "\")
+                                        AddFilename = PhysicalWWWPath & PathFilename
+                                        If AddFileList.Contains(AddFilename) Then
+                                            Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
+                                        Else
+                                            AddFileList.Add(AddFilename)
+                                            collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
+                                        End If
+                                        ResourceCnt = ResourceCnt + 1
+                                    End If
                                 End If
-                                If LCase(Filename) = "collection.hlp" Then
-                                    '
-                                    ' legacy file, remove it
-                                    '
-                                Else
+                            Next
+                        End If
+                        '
+                        ' ContentFileList
+                        '
+                        FileList = CS.GetText("ContentFileList")
+                        If FileList <> "" Then
+                            Files = Split(FileList, vbCrLf)
+                            For Ptr = 0 To UBound(Files)
+                                PathFilename = Files(Ptr)
+                                If PathFilename <> "" Then
+                                    PathFilename = Replace(PathFilename, "\", "/")
+                                    Path = ""
+                                    Filename = PathFilename
+                                    Pos = InStrRev(PathFilename, "/")
+                                    If Pos > 0 Then
+                                        Filename = Mid(PathFilename, Pos + 1)
+                                        Path = Mid(PathFilename, 1, Pos - 1)
+                                    End If
                                     PathFilename = Replace(PathFilename, "/", "\")
-                                    AddFilename = PhysicalWWWPath & PathFilename
+                                    If Left(PathFilename, 1) = "\" Then
+                                        PathFilename = Mid(PathFilename, 2)
+                                    End If
+                                    AddFilename = cp.Site.PhysicalFilePath & PathFilename
                                     If AddFileList.Contains(AddFilename) Then
                                         Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
                                     Else
                                         AddFileList.Add(AddFilename)
-                                        collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
                                     End If
                                     ResourceCnt = ResourceCnt + 1
                                 End If
-                            End If
-                        Next
+                            Next
+                        End If
+                        '
+                        ' ExecFileListNode
+                        '
+                        collectionXml = collectionXml & ExecFileListNode
+                        '
+                        ' Other XML
+                        '
+                        Dim OtherXML As String
+                        OtherXML = CS.GetText("otherxml")
+                        If Trim(OtherXML) <> "" Then
+                            collectionXml = collectionXml & vbCrLf & OtherXML
+                        End If
+                        collectionXml = collectionXml & vbCrLf & "</Collection>"
+                        Call CS.Close()
+                        '
+                        ' Save the installation file and add it to the archive
+                        '
+                        Call cp.File.Save(InstallFilename, collectionXml)
+                        If Not AddFileList.Contains(InstallFilename) Then
+                            AddFileList.Add(InstallFilename)
+                        End If
+                        Call zipFile(ArchiveFilename, AddFileList)
+                        'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
                     End If
-                    '
-                    ' ContentFileList
-                    '
-                    FileList = CS.GetText("ContentFileList")
-                    If FileList <> "" Then
-                        Files = Split(FileList, vbCrLf)
-                        For Ptr = 0 To UBound(Files)
-                            PathFilename = Files(Ptr)
-                            If PathFilename <> "" Then
-                                PathFilename = Replace(PathFilename, "\", "/")
-                                Path = ""
-                                Filename = PathFilename
-                                Pos = InStrRev(PathFilename, "/")
-                                If Pos > 0 Then
-                                    Filename = Mid(PathFilename, Pos + 1)
-                                    Path = Mid(PathFilename, 1, Pos - 1)
-                                End If
-                                PathFilename = Replace(PathFilename, "/", "\")
-                                If Left(PathFilename, 1) = "\" Then
-                                    PathFilename = Mid(PathFilename, 2)
-                                End If
-                                AddFilename = cp.Site.PhysicalFilePath & PathFilename
-                                If AddFileList.Contains(AddFilename) Then
-                                    Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
-                                Else
-                                    AddFileList.Add(AddFilename)
-                                End If
-                                ResourceCnt = ResourceCnt + 1
-                            End If
-                        Next
-                    End If
-                    '
-                    ' ExecFileListNode
-                    '
-                    collectionXml = collectionXml & ExecFileListNode
-                    '
-                    ' Other XML
-                    '
-                    Dim OtherXML As String
-                    OtherXML = CS.GetText("otherxml")
-                    If Trim(OtherXML) <> "" Then
-                        collectionXml = collectionXml & vbCrLf & OtherXML
-                    End If
-                    collectionXml = collectionXml & vbCrLf & "</Collection>"
-                    Call CS.Close()
-                    '
-                    ' Save the installation file and add it to the archive
-                    '
-                    Call cp.File.Save(InstallFilename, collectionXml)
-                    If Not AddFileList.Contains(InstallFilename) Then
-                        AddFileList.Add(InstallFilename)
-                    End If
-                    Call zipFile(ArchiveFilename, AddFileList)
-                    'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
-                End If
             Catch ex As Exception
                 errorReport(cp, ex, "GetCollection")
             End Try
@@ -941,68 +860,92 @@ Namespace Contensive.Addons
                     '
                     ' Styles
                     '
-                    Styles = ""
-                    If Not CS.GetBoolean("BlockDefaultStyles") Then
+                    If cp.Version > "5" Then
+                        '
+                        ' -- v5 does not support styles in block or custom styles 
                         Styles = Trim(CS.GetText("StylesFilename"))
-                    End If
-                    StylesTest = Trim(CS.GetText("CustomStylesFilename"))
-                    If StylesTest <> "" Then
-                        If Styles <> "" Then
-                            Styles = Styles & vbCrLf & StylesTest
-                        Else
-                            Styles = StylesTest
+                        s = s & GetNodeText("Styles", Styles)
+                    Else
+                        '
+                        ' -- v4
+                        Styles = ""
+                        If Not CS.GetBoolean("BlockDefaultStyles") Then
+                            Styles = Trim(CS.GetText("StylesFilename"))
                         End If
+                        StylesTest = Trim(CS.GetText("CustomStylesFilename"))
+                        If StylesTest <> "" Then
+                            If Styles <> "" Then
+                                Styles = Styles & vbCrLf & StylesTest
+                            Else
+                                Styles = StylesTest
+                            End If
+                        End If
+                        s = s & GetNodeText("Styles", Styles)
                     End If
-                    s = s & GetNodeText("Styles", Styles)
                     '
                     ' Scripting
                     '
-                    NodeInnerText = Trim(CS.GetText("ScriptingCode"))
-                    If NodeInnerText <> "" Then
-                        NodeInnerText = vbCrLf & vbTab & vbTab & "<Code>" & EncodeCData(NodeInnerText) & "</Code>"
-                    End If
-                    CS2.Open("Add-on Scripting Module Rules", "addonid=" & addonid)
-                    Do While CS2.OK()
-                        ScriptingModuleID = CS2.GetInteger("ScriptingModuleID")
-                        CS3.Open("Scripting Modules", "ID=" & ScriptingModuleID)
-                        If CS3.OK() Then
-                            Guid = CS3.GetText("ccGuid")
-                            If Guid = "" Then
-                                Guid = cp.Utils.CreateGuid()
-                                Call CS3.SetField("ccGuid", Guid)
-                            End If
-                            Return_IncludeModuleGuidList = Return_IncludeModuleGuidList & vbCrLf & Guid
-                            NodeInnerText = NodeInnerText & vbCrLf & vbTab & vbTab & "<IncludeModule name=""" & cp.Utils.EncodeHTML(CS3.GetText("name")) & """ guid=""" & Guid & """/>"
-                        End If
-                        Call CS3.Close()
-                        Call CS2.GoNext()
-                    Loop
-                    Call CS2.Close()
-                    If NodeInnerText = "" Then
+                    If cp.Version > "5" Then
+                        '
+                        ' -- version 5+
                         s = s & vbCrLf & vbTab & "<Scripting Language=""" & CS.GetText("ScriptingLanguageID") & """ EntryPoint=""" & CS.GetText("ScriptingEntryPoint") & """ Timeout=""" & CS.GetText("ScriptingTimeout") & """/>"
                     Else
-                        s = s & vbCrLf & vbTab & "<Scripting Language=""" & CS.GetText("ScriptingLanguageID") & """ EntryPoint=""" & CS.GetText("ScriptingEntryPoint") & """ Timeout=""" & CS.GetText("ScriptingTimeout") & """>" & NodeInnerText & vbCrLf & vbTab & "</Scripting>"
+                        '
+                        ' -- version 4
+                        NodeInnerText = Trim(CS.GetText("ScriptingCode"))
+                        If NodeInnerText <> "" Then
+                            NodeInnerText = vbCrLf & vbTab & vbTab & "<Code>" & EncodeCData(NodeInnerText) & "</Code>"
+                        End If
+                        CS2.Open("Add-on Scripting Module Rules", "addonid=" & addonid)
+                        Do While CS2.OK()
+                            ScriptingModuleID = CS2.GetInteger("ScriptingModuleID")
+                            CS3.Open("Scripting Modules", "ID=" & ScriptingModuleID)
+                            If CS3.OK() Then
+                                Guid = CS3.GetText("ccGuid")
+                                If Guid = "" Then
+                                    Guid = cp.Utils.CreateGuid()
+                                    Call CS3.SetField("ccGuid", Guid)
+                                End If
+                                Return_IncludeModuleGuidList = Return_IncludeModuleGuidList & vbCrLf & Guid
+                                NodeInnerText = NodeInnerText & vbCrLf & vbTab & vbTab & "<IncludeModule name=""" & cp.Utils.EncodeHTML(CS3.GetText("name")) & """ guid=""" & Guid & """/>"
+                            End If
+                            Call CS3.Close()
+                            Call CS2.GoNext()
+                        Loop
+                        Call CS2.Close()
+                        If NodeInnerText = "" Then
+                            s = s & vbCrLf & vbTab & "<Scripting Language=""" & CS.GetText("ScriptingLanguageID") & """ EntryPoint=""" & CS.GetText("ScriptingEntryPoint") & """ Timeout=""" & CS.GetText("ScriptingTimeout") & """/>"
+                        Else
+                            s = s & vbCrLf & vbTab & "<Scripting Language=""" & CS.GetText("ScriptingLanguageID") & """ EntryPoint=""" & CS.GetText("ScriptingEntryPoint") & """ Timeout=""" & CS.GetText("ScriptingTimeout") & """>" & NodeInnerText & vbCrLf & vbTab & "</Scripting>"
+                        End If
                     End If
                     '
                     ' Shared Styles
                     '
-                    CS2.Open("Shared Styles Add-on Rules", "addonid=" & addonid)
-                    Do While CS2.OK()
-                        styleId = CS2.GetInteger("styleId")
-                        CS3.Open("shared styles", "ID=" & styleId)
-                        If CS3.OK() Then
-                            Guid = CS3.GetText("ccGuid")
-                            If Guid = "" Then
-                                Guid = cp.Utils.CreateGuid()
-                                Call CS3.SetField("ccGuid", Guid)
+                    If (cp.Version > "5") Then
+                        '
+                        ' -- not supported in version 5
+                    Else
+                        '
+                        ' -- v4 only
+                        CS2.Open("Shared Styles Add-on Rules", "addonid=" & addonid)
+                        Do While CS2.OK()
+                            styleId = CS2.GetInteger("styleId")
+                            CS3.Open("shared styles", "ID=" & styleId)
+                            If CS3.OK() Then
+                                Guid = CS3.GetText("ccGuid")
+                                If Guid = "" Then
+                                    Guid = cp.Utils.CreateGuid()
+                                    Call CS3.SetField("ccGuid", Guid)
+                                End If
+                                Return_IncludeSharedStyleGuidList = Return_IncludeSharedStyleGuidList & vbCrLf & Guid
+                                s = s & vbCrLf & vbTab & "<IncludeSharedStyle name=""" & cp.Utils.EncodeHTML(CS3.GetText("name")) & """ guid=""" & Guid & """/>"
                             End If
-                            Return_IncludeSharedStyleGuidList = Return_IncludeSharedStyleGuidList & vbCrLf & Guid
-                            s = s & vbCrLf & vbTab & "<IncludeSharedStyle name=""" & cp.Utils.EncodeHTML(CS3.GetText("name")) & """ guid=""" & Guid & """/>"
-                        End If
-                        Call CS3.Close()
-                        Call CS2.GoNext()
-                    Loop
-                    Call CS2.Close()
+                            Call CS3.Close()
+                            Call CS2.GoNext()
+                        Loop
+                        Call CS2.Close()
+                    End If
                     '
                     ' Process Triggers
                     '

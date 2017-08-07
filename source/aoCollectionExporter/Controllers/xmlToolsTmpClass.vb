@@ -7,7 +7,7 @@ Imports System.Collections.Generic
 Imports System.Text
 Imports Contensive.BaseClasses
 
-Namespace Contensive.Addons
+Namespace Contensive.Addons.aoCollectionExporter
     Public Class xmlToolsClass
         '
         '========================================================================
@@ -19,30 +19,8 @@ Namespace Contensive.Addons
         Private iAbort As Boolean
         Private iBusy As Integer
         Private iTaskCount As Integer
-        Const ApplicationNameLocal = "unknown"
+        ' Const ApplicationNameLocal = "unknown"
         Private cp As CPBaseClass
-        '
-        ' ----- This should match the Lookup List in the NavIconType field in the Navigator Entry content definition
-        '
-        Public Const navTypeIDList = "Add-on,Report,Setting,Tool"
-        Public Const NavTypeIDAddon = 1
-        Public Const NavTypeIDReport = 2
-        Public Const NavTypeIDSetting = 3
-        Public Const NavTypeIDTool = 4
-        '
-        Public Const NavIconTypeList = "Custom,Advanced,Content,Folder,Email,User,Report,Setting,Tool,Record,Addon,help"
-        Public Const NavIconTypeCustom = 1
-        Public Const NavIconTypeAdvanced = 2
-        Public Const NavIconTypeContent = 3
-        Public Const NavIconTypeFolder = 4
-        Public Const NavIconTypeEmail = 5
-        Public Const NavIconTypeUser = 6
-        Public Const NavIconTypeReport = 7
-        Public Const NavIconTypeSetting = 8
-        Public Const NavIconTypeTool = 9
-        Public Const NavIconTypeRecord = 10
-        Public Const NavIconTypeAddon = 11
-        Public Const NavIconTypeHelp = 12
         '
         '====================================================================================================
         ''' <summary>
@@ -823,58 +801,58 @@ Namespace Contensive.Addons
             csv_GetFieldDescriptorByType = ""
             Try
                 Select Case fieldType
-                    Case aoCollectionExporterClass.FieldTypeBoolean
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorBoolean
-                    Case aoCollectionExporterClass.FieldTypeCurrency
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorCurrency
-                    Case aoCollectionExporterClass.FieldTypeDate
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorDate
-                    Case aoCollectionExporterClass.FieldTypeFile
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorFile
-                    Case aoCollectionExporterClass.FieldTypeFloat
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorFloat
-                    Case aoCollectionExporterClass.FieldTypeImage
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorImage
-                    Case aoCollectionExporterClass.FieldTypeLink
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorLink
-                    Case aoCollectionExporterClass.FieldTypeResourceLink
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorResourceLink
-                    Case aoCollectionExporterClass.FieldTypeInteger
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorInteger
-                    Case aoCollectionExporterClass.FieldTypeLongText
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorLongText
-                    Case aoCollectionExporterClass.FieldTypeLookup
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorLookup
-                    Case aoCollectionExporterClass.FieldTypeMemberSelect
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorMemberSelect
-                    Case aoCollectionExporterClass.FieldTypeRedirect
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorRedirect
-                    Case aoCollectionExporterClass.FieldTypeManyToMany
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorManyToMany
-                    Case aoCollectionExporterClass.FieldTypeTextFile
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorTextFile
-                    Case aoCollectionExporterClass.FieldTypeCSSFile
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorCSSFile
-                    Case aoCollectionExporterClass.FieldTypeXMLFile
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorXMLFile
-                    Case aoCollectionExporterClass.FieldTypeJavascriptFile
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorJavascriptFile
-                    Case aoCollectionExporterClass.FieldTypeText
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorText
-                    Case aoCollectionExporterClass.FieldTypeHTML
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorHTML
-                    Case aoCollectionExporterClass.FieldTypeHTMLFile
-                        csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorHTMLFile
+                    Case FieldTypeBoolean
+                        csv_GetFieldDescriptorByType = FieldDescriptorBoolean
+                    Case FieldTypeCurrency
+                        csv_GetFieldDescriptorByType = FieldDescriptorCurrency
+                    Case FieldTypeDate
+                        csv_GetFieldDescriptorByType = FieldDescriptorDate
+                    Case FieldTypeFile
+                        csv_GetFieldDescriptorByType = FieldDescriptorFile
+                    Case FieldTypeFloat
+                        csv_GetFieldDescriptorByType = FieldDescriptorFloat
+                    Case FieldTypeImage
+                        csv_GetFieldDescriptorByType = FieldDescriptorImage
+                    Case FieldTypeLink
+                        csv_GetFieldDescriptorByType = FieldDescriptorLink
+                    Case FieldTypeResourceLink
+                        csv_GetFieldDescriptorByType = FieldDescriptorResourceLink
+                    Case FieldTypeInteger
+                        csv_GetFieldDescriptorByType = FieldDescriptorInteger
+                    Case FieldTypeLongText
+                        csv_GetFieldDescriptorByType = FieldDescriptorLongText
+                    Case FieldTypeLookup
+                        csv_GetFieldDescriptorByType = FieldDescriptorLookup
+                    Case FieldTypeMemberSelect
+                        csv_GetFieldDescriptorByType = FieldDescriptorMemberSelect
+                    Case FieldTypeRedirect
+                        csv_GetFieldDescriptorByType = FieldDescriptorRedirect
+                    Case FieldTypeManyToMany
+                        csv_GetFieldDescriptorByType = FieldDescriptorManyToMany
+                    Case FieldTypeTextFile
+                        csv_GetFieldDescriptorByType = FieldDescriptorTextFile
+                    Case FieldTypeCSSFile
+                        csv_GetFieldDescriptorByType = FieldDescriptorCSSFile
+                    Case FieldTypeXMLFile
+                        csv_GetFieldDescriptorByType = FieldDescriptorXMLFile
+                    Case FieldTypeJavascriptFile
+                        csv_GetFieldDescriptorByType = FieldDescriptorJavascriptFile
+                    Case FieldTypeText
+                        csv_GetFieldDescriptorByType = FieldDescriptorText
+                    Case FieldTypeHTML
+                        csv_GetFieldDescriptorByType = FieldDescriptorHTML
+                    Case FieldTypeHTMLFile
+                        csv_GetFieldDescriptorByType = FieldDescriptorHTMLFile
                     Case Else
-                        If fieldType = aoCollectionExporterClass.FieldTypeAutoIncrement Then
+                        If fieldType = FieldTypeAutoIncrement Then
                             csv_GetFieldDescriptorByType = "AutoIncrement"
-                        ElseIf fieldType = aoCollectionExporterClass.FieldTypeMemberSelect Then
+                        ElseIf fieldType = FieldTypeMemberSelect Then
                             csv_GetFieldDescriptorByType = "MemberSelect"
                         Else
                             '
                             ' If field type is ignored, call it a text field
                             '
-                            csv_GetFieldDescriptorByType = aoCollectionExporterClass.FieldDescriptorText
+                            csv_GetFieldDescriptorByType = FieldDescriptorText
                         End If
                 End Select
             Catch ex As Exception
