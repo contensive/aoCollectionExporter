@@ -83,27 +83,27 @@ Namespace Contensive.Addons
                         'hint = hint & ",500"
                         'Call Main.testpoint("hint=" & hint)
                         returnHtml = CP.UserError.GetList() _
-                            & vbCrLf & vbTab & "<div class=""responseForm"">" _
-                            & vbCrLf & vbTab & vbTab & "<p>Click <a href=""" & CP.Site.FilePath & Replace(CollectionFilename, "\", "/") & """>here</a> to download the collection file</p>" _
-                            & vbCrLf & vbTab & "</div>"
+                                & vbCrLf & vbTab & "<div class=""responseForm"">" _
+                                & vbCrLf & vbTab & vbTab & "<p>Click <a href=""" & CP.Site.FilePath & Replace(CollectionFilename, "\", "/") & """>here</a> to download the collection file</p>" _
+                                & vbCrLf & vbTab & "</div>"
                     Case Else
                         '
                         ' ask them to select a collectioin to export
                         '
                         returnHtml = "" _
-                            & vbCrLf & vbTab & "<div class=""mainForm"">" _
-                            & vbCrLf & vbTab & vbTab & CP.UserError.GetList() _
-                            & vbCrLf & vbTab & vbTab & vbTab & "<p>Select a collection to be exported. If the project is being developed and you need to add an executable resource that is not installed as an add-on on this site, use the file upload.</p>" _
-                            & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.SelectContent(RequestNameCollectionID, "0", "Add-on Collections") & "<br>The collection to export</p>" _
-                            & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.Button("button", "Export Collection") & "</p>" _
-                            & vbCrLf & vbTab & vbTab & "</form>" _
-                            & vbCrLf & vbTab & "</div>"
+                                & vbCrLf & vbTab & "<div class=""mainForm"">" _
+                                & vbCrLf & vbTab & vbTab & CP.UserError.GetList() _
+                                & vbCrLf & vbTab & vbTab & vbTab & "<p>Select a collection to be exported. If the project is being developed and you need to add an executable resource that is not installed as an add-on on this site, use the file upload.</p>" _
+                                & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.SelectContent(RequestNameCollectionID, "0", "Add-on Collections") & "<br>The collection to export</p>" _
+                                & vbCrLf & vbTab & vbTab & vbTab & "<p>" & CP.Html.Button("button", "Export Collection") & "</p>" _
+                                & vbCrLf & vbTab & vbTab & "</form>" _
+                                & vbCrLf & vbTab & "</div>"
                 End Select
                 '
                 returnHtml = "" _
-                    & vbCrLf & vbTab & "<div class=""collectionExport"">" _
-                    & CP.Html.Form(returnHtml) _
-                    & vbCrLf & vbTab & "</div>"
+                        & vbCrLf & vbTab & "<div class=""collectionExport"">" _
+                        & CP.Html.Form(returnHtml) _
+                        & vbCrLf & vbTab & "</div>"
             Catch ex As Exception
                 errorReport(CP, ex, "execute")
                 returnHtml = ""
@@ -220,8 +220,8 @@ Namespace Contensive.Addons
                     isUpdatable = CS.GetBoolean("updatable")
                     blockNavigatorNode = CS.GetBoolean("blockNavigatorNode")
                     collectionXml = "" _
-                        & "<?xml version=""1.0"" encoding=""windows-1252""?>" _
-                        & vbCrLf & "<Collection name=""" & cp.Utils.EncodeHTML(CollectionName) & """ guid=""" & CollectionGuid & """ system=""" & kmaGetYesNo(CS.GetBoolean("system")) & """ updatable=""" & kmaGetYesNo(isUpdatable) & """ blockNavigatorNode=""" & kmaGetYesNo(blockNavigatorNode) & """>"
+                            & "<?xml version=""1.0"" encoding=""windows-1252""?>" _
+                            & vbCrLf & "<Collection name=""" & cp.Utils.EncodeHTML(CollectionName) & """ guid=""" & CollectionGuid & """ system=""" & kmaGetYesNo(CS.GetBoolean("system")) & """ updatable=""" & kmaGetYesNo(isUpdatable) & """ blockNavigatorNode=""" & kmaGetYesNo(blockNavigatorNode) & """>"
                     '
                     ' Archive Filenames
                     '
@@ -328,8 +328,8 @@ Namespace Contensive.Addons
                                     DataContentId = cp.Content.GetID(DataContentName)
                                     If DataContentId <= 0 Then
                                         RecordNodes = "" _
-                                            & RecordNodes _
-                                            & vbCrLf & vbTab & "<!-- data missing, content not found during export, content=""" & DataContentName & """ guid=""" & DataRecordGuid & """ name=""" & DataRecordName & """ -->"
+                                                & RecordNodes _
+                                                & vbCrLf & vbTab & "<!-- data missing, content not found during export, content=""" & DataContentName & """ guid=""" & DataRecordGuid & """ name=""" & DataRecordName & """ -->"
                                     Else
                                         supportsGuid = cp.Content.IsField(DataContentName, "ccguid")
                                         If UBound(DataSplit) = 0 Then
@@ -382,8 +382,8 @@ Namespace Contensive.Addons
                                         End If
                                         If Not CSData.Open(DataContentName, Criteria, "id") Then
                                             RecordNodes = "" _
-                                                & RecordNodes _
-                                                & vbCrLf & vbTab & "<!-- data missing, record not found during export, content=""" & DataContentName & """ guid=""" & DataRecordGuid & """ name=""" & DataRecordName & """ -->"
+                                                    & RecordNodes _
+                                                    & vbCrLf & vbTab & "<!-- data missing, record not found during export, content=""" & DataContentName & """ guid=""" & DataRecordGuid & """ name=""" & DataRecordName & """ -->"
                                         Else
                                             '
                                             ' determine all valid fields
@@ -517,10 +517,10 @@ Namespace Contensive.Addons
                                                     FieldNodes = FieldNodes & vbCrLf & vbTab & "<field name=""" & cp.Utils.EncodeHTML(FieldName) & """>" & FieldValue & "</field>"
                                                 Next
                                                 RecordNodes = "" _
-                                                    & RecordNodes _
-                                                    & vbCrLf & vbTab & "<record content=""" & cp.Utils.EncodeHTML(DataContentName) & """ guid=""" & DataRecordGuid & """ name=""" & cp.Utils.EncodeHTML(DataRecordName) & """>" _
-                                                    & tabIndent(FieldNodes) _
-                                                    & vbCrLf & vbTab & "</record>"
+                                                        & RecordNodes _
+                                                        & vbCrLf & vbTab & "<record content=""" & cp.Utils.EncodeHTML(DataContentName) & """ guid=""" & DataRecordGuid & """ name=""" & cp.Utils.EncodeHTML(DataRecordName) & """>" _
+                                                        & tabIndent(FieldNodes) _
+                                                        & vbCrLf & vbTab & "</record>"
                                                 Call CSData.GoNext()
                                             Loop
                                         End If
@@ -531,10 +531,10 @@ Namespace Contensive.Addons
                         Next
                         If RecordNodes <> "" Then
                             collectionXml = "" _
-                                & collectionXml _
-                                & vbCrLf & vbTab & "<data>" _
-                                & tabIndent(RecordNodes) _
-                                & vbCrLf & vbTab & "</data>"
+                                    & collectionXml _
+                                    & vbCrLf & vbTab & "<data>" _
+                                    & tabIndent(RecordNodes) _
+                                    & vbCrLf & vbTab & "</data>"
                         End If
                     End If
                     '
@@ -611,15 +611,15 @@ Namespace Contensive.Addons
                                     CS2.Open("Shared Styles", "ccguid=" & cp.Db.EncodeSQLText(recordGuid))
                                     If CS2.OK() Then
                                         collectionXml = collectionXml & vbCrLf & vbTab & "<SharedStyle" _
-                                            & " Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """" _
-                                            & " guid=""" & recordGuid & """" _
-                                            & " alwaysInclude=""" & CS2.GetBoolean("alwaysInclude") & """" _
-                                            & " prefix=""" & cp.Utils.EncodeHTML(CS2.GetText("prefix")) & """" _
-                                            & " suffix=""" & cp.Utils.EncodeHTML(CS2.GetText("suffix")) & """" _
-                                            & " sortOrder=""" & cp.Utils.EncodeHTML(CS2.GetText("sortOrder")) & """" _
-                                            & ">" _
-                                            & EncodeCData(Trim(CS2.GetText("styleFilename"))) _
-                                            & "</SharedStyle>"
+                                                & " Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """" _
+                                                & " guid=""" & recordGuid & """" _
+                                                & " alwaysInclude=""" & CS2.GetBoolean("alwaysInclude") & """" _
+                                                & " prefix=""" & cp.Utils.EncodeHTML(CS2.GetText("prefix")) & """" _
+                                                & " suffix=""" & cp.Utils.EncodeHTML(CS2.GetText("suffix")) & """" _
+                                                & " sortOrder=""" & cp.Utils.EncodeHTML(CS2.GetText("sortOrder")) & """" _
+                                                & ">" _
+                                                & EncodeCData(Trim(CS2.GetText("styleFilename"))) _
+                                                & "</SharedStyle>"
                                     End If
                                     Call CS2.Close()
                                 End If
@@ -646,102 +646,103 @@ Namespace Contensive.Addons
                         Loop While CS3.OK()
                     End If
                     Call CS3.Close()
-                        collectionXml = collectionXml & Node
-                        '
-                        ' wwwFileList
-                        '
-                        ResourceCnt = 0
-                        FileList = CS.GetText("wwwFileList")
-                        If FileList <> "" Then
-                            PhysicalWWWPath = cp.Site.PhysicalWWWPath
-                            If Right(PhysicalWWWPath, 1) <> "\" Then
-                                PhysicalWWWPath = PhysicalWWWPath & "\"
-                            End If
-                            Files = Split(FileList, vbCrLf)
-                            For Ptr = 0 To UBound(Files)
-                                PathFilename = Files(Ptr)
-                                If PathFilename <> "" Then
-                                    PathFilename = Replace(PathFilename, "\", "/")
-                                    Path = ""
-                                    Filename = PathFilename
-                                    Pos = InStrRev(PathFilename, "/")
-                                    If Pos > 0 Then
-                                        Filename = Mid(PathFilename, Pos + 1)
-                                        Path = Mid(PathFilename, 1, Pos - 1)
-                                    End If
-                                    If LCase(Filename) = "collection.hlp" Then
-                                        '
-                                        ' legacy file, remove it
-                                        '
-                                    Else
-                                        PathFilename = Replace(PathFilename, "/", "\")
-                                        AddFilename = PhysicalWWWPath & PathFilename
-                                        If AddFileList.Contains(AddFilename) Then
-                                            Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
-                                        Else
-                                            AddFileList.Add(AddFilename)
-                                            collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
-                                        End If
-                                        ResourceCnt = ResourceCnt + 1
-                                    End If
-                                End If
-                            Next
+                    collectionXml = collectionXml & Node
+                    '
+                    ' wwwFileList
+                    '
+                    ResourceCnt = 0
+                    FileList = CS.GetText("wwwFileList")
+                    If FileList <> "" Then
+                        PhysicalWWWPath = cp.Site.PhysicalWWWPath
+                        If Right(PhysicalWWWPath, 1) <> "\" Then
+                            PhysicalWWWPath = PhysicalWWWPath & "\"
                         End If
-                        '
-                        ' ContentFileList
-                        '
-                        FileList = CS.GetText("ContentFileList")
-                        If FileList <> "" Then
-                            Files = Split(FileList, vbCrLf)
-                            For Ptr = 0 To UBound(Files)
-                                PathFilename = Files(Ptr)
-                                If PathFilename <> "" Then
-                                    PathFilename = Replace(PathFilename, "\", "/")
-                                    Path = ""
-                                    Filename = PathFilename
-                                    Pos = InStrRev(PathFilename, "/")
-                                    If Pos > 0 Then
-                                        Filename = Mid(PathFilename, Pos + 1)
-                                        Path = Mid(PathFilename, 1, Pos - 1)
-                                    End If
+                        Files = Split(FileList, vbCrLf)
+                        For Ptr = 0 To UBound(Files)
+                            PathFilename = Files(Ptr)
+                            If PathFilename <> "" Then
+                                PathFilename = Replace(PathFilename, "\", "/")
+                                Path = ""
+                                Filename = PathFilename
+                                Pos = InStrRev(PathFilename, "/")
+                                If Pos > 0 Then
+                                    Filename = Mid(PathFilename, Pos + 1)
+                                    Path = Mid(PathFilename, 1, Pos - 1)
+                                End If
+                                If LCase(Filename) = "collection.hlp" Then
+                                    '
+                                    ' legacy file, remove it
+                                    '
+                                Else
                                     PathFilename = Replace(PathFilename, "/", "\")
-                                    If Left(PathFilename, 1) = "\" Then
-                                        PathFilename = Mid(PathFilename, 2)
-                                    End If
-                                    AddFilename = cp.Site.PhysicalFilePath & PathFilename
+                                    AddFilename = PhysicalWWWPath & PathFilename
                                     If AddFileList.Contains(AddFilename) Then
                                         Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
                                     Else
                                         AddFileList.Add(AddFilename)
+                                        collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
                                     End If
                                     ResourceCnt = ResourceCnt + 1
                                 End If
-                            Next
-                        End If
-                        '
-                        ' ExecFileListNode
-                        '
-                        collectionXml = collectionXml & ExecFileListNode
-                        '
-                        ' Other XML
-                        '
-                        Dim OtherXML As String
-                        OtherXML = CS.GetText("otherxml")
-                        If Trim(OtherXML) <> "" Then
-                            collectionXml = collectionXml & vbCrLf & OtherXML
-                        End If
-                        collectionXml = collectionXml & vbCrLf & "</Collection>"
-                        Call CS.Close()
-                        '
-                        ' Save the installation file and add it to the archive
-                        '
-                        Call cp.File.Save(InstallFilename, collectionXml)
-                        If Not AddFileList.Contains(InstallFilename) Then
-                            AddFileList.Add(InstallFilename)
-                        End If
-                        Call zipFile(ArchiveFilename, AddFileList)
-                        'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
+                            End If
+                        Next
                     End If
+                    '
+                    ' ContentFileList
+                    '
+                    FileList = CS.GetText("ContentFileList")
+                    If FileList <> "" Then
+                        Files = Split(FileList, vbCrLf)
+                        For Ptr = 0 To UBound(Files)
+                            PathFilename = Files(Ptr)
+                            If PathFilename <> "" Then
+                                PathFilename = Replace(PathFilename, "\", "/")
+                                Path = ""
+                                Filename = PathFilename
+                                Pos = InStrRev(PathFilename, "/")
+                                If Pos > 0 Then
+                                    Filename = Mid(PathFilename, Pos + 1)
+                                    Path = Mid(PathFilename, 1, Pos - 1)
+                                End If
+                                PathFilename = Replace(PathFilename, "/", "\")
+                                If Left(PathFilename, 1) = "\" Then
+                                    PathFilename = Mid(PathFilename, 2)
+                                End If
+                                AddFilename = cp.Site.PhysicalFilePath & PathFilename
+                                If AddFileList.Contains(AddFilename) Then
+                                    Call cp.UserError.Add("There was an error exporting this collection because there were multiple files with the same filename [" & Filename & "]")
+                                Else
+                                    AddFileList.Add(AddFilename)
+                                    collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""content"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
+                                End If
+                                ResourceCnt = ResourceCnt + 1
+                            End If
+                        Next
+                    End If
+                    '
+                    ' ExecFileListNode
+                    '
+                    collectionXml = collectionXml & ExecFileListNode
+                    '
+                    ' Other XML
+                    '
+                    Dim OtherXML As String
+                    OtherXML = CS.GetText("otherxml")
+                    If Trim(OtherXML) <> "" Then
+                        collectionXml = collectionXml & vbCrLf & OtherXML
+                    End If
+                    collectionXml = collectionXml & vbCrLf & "</Collection>"
+                    Call CS.Close()
+                    '
+                    ' Save the installation file and add it to the archive
+                    '
+                    Call cp.File.Save(InstallFilename, collectionXml)
+                    If Not AddFileList.Contains(InstallFilename) Then
+                        AddFileList.Add(InstallFilename)
+                    End If
+                    Call zipFile(ArchiveFilename, AddFileList)
+                    'Call runAtServer("zipfile", "archive=" & kmaEncodeRequestVariable(ArchiveFilename) & "&add=" & kmaEncodeRequestVariable("@" & AddFileListFilename))
+                End If
             Catch ex As Exception
                 errorReport(cp, ex, "GetCollection")
             End Try
@@ -1001,9 +1002,9 @@ Namespace Contensive.Addons
                         NavType = "Add-on"
                     End If
                     s = "" _
-                    & vbCrLf & vbTab & "<Addon name=""" & cp.Utils.EncodeHTML(addonName) & """ guid=""" & Guid & """ type=""" & NavType & """>" _
-                    & tabIndent(s) _
-                    & vbCrLf & vbTab & "</Addon>"
+                        & vbCrLf & vbTab & "<Addon name=""" & cp.Utils.EncodeHTML(addonName) & """ guid=""" & Guid & """ type=""" & NavType & """>" _
+                        & tabIndent(s) _
+                        & vbCrLf & vbTab & "</Addon>"
                 End If
                 Call CS.Close()
                 '
