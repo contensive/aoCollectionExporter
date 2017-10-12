@@ -52,9 +52,6 @@ Namespace Contensive.Addons
                         Case Else
                             '
                             ' process the Select Collection Form button
-                            '
-                            'hint = hint & ",200"
-                            'Call Main.testpoint("hint=" & hint)
                             CollectionID = CP.Doc.GetInteger(RequestNameCollectionID)
                             CollectionName = CP.Content.GetRecordName("Add-on Collections", CollectionID)
                             If CollectionName = "" Then
@@ -761,7 +758,6 @@ Namespace Contensive.Addons
                 Dim fieldTypeID As Integer
                 Dim TriggerContentID As Integer
                 Dim StylesTest As String
-                Dim BlockEditTools As Boolean
                 Dim NavType As String
                 Dim Styles As String
                 Dim NodeInnerText As String
@@ -769,47 +765,38 @@ Namespace Contensive.Addons
                 Dim ScriptingModuleID As Integer
                 Dim Guid As String
                 Dim addonName As String
-                Dim processRunOnce As Boolean
                 Dim CS As CPCSBaseClass = cp.CSNew()
                 Dim CS2 As CPCSBaseClass = cp.CSNew()
                 Dim CS3 As CPCSBaseClass = cp.CSNew()
                 '
                 If CS.OpenRecord("Add-ons", addonid) Then
                     addonName = CS.GetText("name")
-                    processRunOnce = CS.GetBoolean("ProcessRunOnce")
-                    If ((LCase(addonName) = "oninstall") Or (LCase(addonName) = "_oninstall")) Then
-                        processRunOnce = True
-                    End If
                     '
                     ' ActiveX DLL node is being deprecated. This should be in the collection resource section
                     '
-                    s = s & GetNodeText("Copy", CS.GetText("Copy"))
-                    s = s & GetNodeText("CopyText", CS.GetText("CopyText"))
+                    s = s & GetNodeText("Copy", CS, "Copy")
+                    s = s & GetNodeText("CopyText", CS, "CopyText")
                     '
                     ' DLL
                     '
 
-                    s = s & GetNodeText("ActiveXProgramID", CS.GetText("objectprogramid"))
-                    s = s & GetNodeText("DotNetClass", CS.GetText("DotNetClass"))
+                    s = s & GetNodeText("ActiveXProgramID", CS, "objectprogramid")
+                    s = s & GetNodeText("DotNetClass", CS, "DotNetClass")
                     '
                     ' Features
                     '
-                    s = s & GetNodeText("ArgumentList", CS.GetText("ArgumentList"))
-                    s = s & GetNodeBoolean("AsAjax", CS.GetBoolean("AsAjax"))
-                    s = s & GetNodeBoolean("Filter", CS.GetBoolean("Filter"))
-                    s = s & GetNodeText("Help", CS.GetText("Help"))
-                    s = s & GetNodeText("HelpLink", CS.GetText("HelpLink"))
+                    s = s & GetNodeText("ArgumentList", CS, "ArgumentList")
+                    s = s & GetNodeBoolean("AsAjax", CS, "AsAjax")
+                    s = s & GetNodeBoolean("Filter", CS, "Filter")
+                    s = s & GetNodeText("Help", CS, "Help")
+                    s = s & GetNodeText("HelpLink", CS, "HelpLink")
                     s = s & vbCrLf & vbTab & "<Icon Link=""" & CS.GetText("iconfilename") & """ width=""" & CS.GetInteger("iconWidth") & """ height=""" & CS.GetInteger("iconHeight") & """ sprites=""" & CS.GetInteger("iconSprites") & """ />"
-                    s = s & GetNodeBoolean("InIframe", CS.GetBoolean("InFrame"))
-                    BlockEditTools = False
-                    If CS.FieldOK("BlockEditTools") Then
-                        BlockEditTools = CS.GetBoolean("BlockEditTools")
-                    End If
-                    s = s & GetNodeBoolean("BlockEditTools", BlockEditTools)
+                    s = s & GetNodeBoolean("InIframe", CS, "InFrame")
+                    s = s & GetNodeBoolean("BlockEditTools", CS, "BlockEditTools")
                     '
                     ' Form XML
                     '
-                    s = s & GetNodeText("FormXML", CS.GetText("FormXML"))
+                    s = s & GetNodeText("FormXML", CS, "FormXML")
                     '
                     NodeInnerText = ""
                     CS2.Open("Add-on Include Rules", "addonid=" & addonid)
@@ -829,43 +816,59 @@ Namespace Contensive.Addons
                     Loop
                     Call CS2.Close()
                     '
-                    s = s & GetNodeBoolean("IsInline", CS.GetBoolean("IsInline"))
-                    s = s & GetNodeText("JavascriptOnLoad", CS.GetText("JavascriptOnLoad"))
-                    s = s & GetNodeText("JavascriptInHead", CS.GetText("JSFilename"))
-                    s = s & GetNodeText("JavascriptBodyEnd", CS.GetText("JavascriptBodyEnd"))
-                    s = s & GetNodeText("MetaDescription", CS.GetText("MetaDescription"))
-                    s = s & GetNodeText("OtherHeadTags", CS.GetText("OtherHeadTags"))
+                    s = s & GetNodeBoolean("IsInline", CS, "IsInline")
+                    '
+                    ' -- javascript
+                    s = s & GetNodeText("JSHeadScriptSrc", CS, "JSHeadScriptSrc")
+                    s = s & GetNodeText("JavascriptInHead", CS, "JSFilename")
+                    s = s & GetNodeText("JSBodyScriptSrc", CS, "JSBodyScriptSrc")
+                    s = s & GetNodeText("JavascriptBodyEnd", CS, "JavascriptBodyEnd")
+                    '
+                    ' -- deprecated, skip it if the site does not have the field
+                    If (CS.FieldOK("JavascriptOnLoad")) Then
+                        Dim fieldValue = CS.GetText("JavascriptOnLoad")
+                        If (Not String.IsNullOrEmpty(fieldValue)) Then
+                            s = s & GetNodeText("JavascriptOnLoad", fieldValue)
+                        End If
+                    End If
+                    '
+                    s = s & GetNodeText("MetaDescription", CS, ("MetaDescription"))
+                    s = s & GetNodeText("OtherHeadTags", CS, "OtherHeadTags")
                     '
                     ' Placements
                     '
-                    s = s & GetNodeBoolean("Content", CS.GetBoolean("Content"))
-                    s = s & GetNodeBoolean("Template", CS.GetBoolean("Template"))
-                    s = s & GetNodeBoolean("Email", CS.GetBoolean("Email"))
-                    s = s & GetNodeBoolean("Admin", CS.GetBoolean("Admin"))
-                    s = s & GetNodeBoolean("OnPageEndEvent", CS.GetBoolean("OnPageEndEvent"))
-                    s = s & GetNodeBoolean("OnPageStartEvent", CS.GetBoolean("OnPageStartEvent"))
-                    s = s & GetNodeBoolean("OnBodyStart", CS.GetBoolean("OnBodyStart"))
-                    s = s & GetNodeBoolean("OnBodyEnd", CS.GetBoolean("OnBodyEnd"))
-                    s = s & GetNodeBoolean("RemoteMethod", CS.GetBoolean("RemoteMethod"))
-                    's = s & GetNodeBoolean("OnNewVisitEvent", CS.GetBoolean( "OnNewVisitEvent"))
+                    s = s & GetNodeBoolean("Content", CS, ("Content"))
+                    s = s & GetNodeBoolean("Template", CS, ("Template"))
+                    s = s & GetNodeBoolean("Email", CS, ("Email"))
+                    s = s & GetNodeBoolean("Admin", CS, ("Admin"))
+                    s = s & GetNodeBoolean("OnPageEndEvent", CS, ("OnPageEndEvent"))
+                    s = s & GetNodeBoolean("OnPageStartEvent", CS, ("OnPageStartEvent"))
+                    s = s & GetNodeBoolean("OnBodyStart", CS, ("OnBodyStart"))
+                    s = s & GetNodeBoolean("OnBodyEnd", CS, ("OnBodyEnd"))
+                    s = s & GetNodeBoolean("RemoteMethod", CS, ("RemoteMethod"))
+                    's = s & GetNodeBoolean("OnNewVisitEvent", cs, ( "OnNewVisitEvent"))
                     '
                     ' Process
                     '
-                    s = s & GetNodeBoolean("ProcessRunOnce", processRunOnce)
+                    If ((LCase(addonName) = "oninstall") Or (LCase(addonName) = "_oninstall")) Then
+                        s = s & GetNodeBoolean("ProcessRunOnce", True)
+                    End If
                     s = s & GetNodeInteger("ProcessInterval", CS.GetInteger("ProcessInterval"))
                     '
                     ' Meta
                     '
-                    s = s & GetNodeText("PageTitle", CS.GetText("PageTitle"))
-                    s = s & GetNodeText("RemoteAssetLink", CS.GetText("RemoteAssetLink"))
+                    s = s & GetNodeText("PageTitle", CS, ("PageTitle"))
+                    s = s & GetNodeText("RemoteAssetLink", CS, ("RemoteAssetLink"))
                     '
                     ' Styles
+                    '
+                    s = s & GetNodeText("Styles", CS, "StylesFilename")
+                    s = s & GetNodeText("StylesLinkHref", CS, "StylesLinkHref")
                     '
                     If cp.Version > "5" Then
                         '
                         ' -- v5 does not support styles in block or custom styles 
                         Styles = Trim(CS.GetText("StylesFilename"))
-                        s = s & GetNodeText("Styles", Styles)
                     Else
                         '
                         ' -- v4
@@ -1019,6 +1022,30 @@ Namespace Contensive.Addons
         ''' create a simple text node with a name and content
         ''' </summary>
         ''' <param name="NodeName"></param>
+        ''' <param name="fieldName"></param>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Private Function GetNodeText(NodeName As String, cs As CPCSBaseClass, fieldName As String) As String
+            GetNodeText = ""
+            Try
+                If cs.FieldOK(fieldName) Then
+                    Dim fieldValue As String = cs.GetText(fieldName)
+                    If (String.IsNullOrEmpty(fieldValue)) Then
+                        GetNodeText = vbCrLf & vbTab & "<" & NodeName & "></" & NodeName & ">"
+                    Else
+                        GetNodeText = vbCrLf & vbTab & "<" & NodeName & ">" & EncodeCData(fieldValue) & "</" & NodeName & ">"
+                    End If
+                End If
+            Catch ex As Exception
+                errorReport(cp, ex, "getNodeText")
+            End Try
+        End Function
+        '
+        '====================================================================================================
+        ''' <summary>
+        ''' create a simple text node with a name and content
+        ''' </summary>
+        ''' <param name="NodeName"></param>
         ''' <param name="NodeContent"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
@@ -1045,12 +1072,23 @@ Namespace Contensive.Addons
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function GetNodeBoolean(NodeName As String, NodeContent As Boolean) As String
-            GetNodeBoolean = ""
             Try
-                GetNodeBoolean = vbCrLf & vbTab & "<" & NodeName & ">" & kmaGetYesNo(NodeContent) & "</" & NodeName & ">"
+                Return vbCrLf & vbTab & "<" & NodeName & ">" & kmaGetYesNo(NodeContent) & "</" & NodeName & ">"
             Catch ex As Exception
                 errorReport(cp, ex, "GetNodeBoolean")
             End Try
+            Return ""
+        End Function
+        '
+        Private Function GetNodeBoolean(NodeName As String, cs As CPCSBaseClass, FieldName As String) As String
+            Try
+                If (cs.FieldOK(FieldName)) Then
+                    Return GetNodeBoolean(NodeName, cs.GetBoolean(FieldName))
+                End If
+            Catch ex As Exception
+                errorReport(cp, ex, "GetNodeBoolean")
+            End Try
+            Return ""
         End Function
         '
         '====================================================================================================
