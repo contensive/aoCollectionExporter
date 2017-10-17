@@ -39,26 +39,26 @@ Namespace Contensive.Addons.aoCollectionExporter
         End Class
         '
         '====================================================================================================
-        Public Function GetXMLContentDefinition3(Optional ByVal ContentName As String = "", Optional ByVal IncludeBaseFields As Boolean = False) As String
+        Public Function GetXMLContentDefinition3(Optional ByVal contentName As String = "", Optional ByVal IncludeBaseFields As Boolean = False) As String
             GetXMLContentDefinition3 = ""
             Try
                 '
-                Const ContentSelectList = "" _
-                    & " id,name,active,adminonly,allowadd" _
-                    & ",allowcalendarevents,allowcontentchildtool,allowcontenttracking,allowdelete,allowmetacontent" _
-                    & ",allowtopicrules,AllowWorkflowAuthoring,AuthoringTableID" _
-                    & ",ContentTableID,DefaultSortMethodID,DeveloperOnly,DropDownFieldList" _
-                    & ",EditorGroupID,ParentID,ccGuid,IsBaseContent" _
-                    & ",IconLink,IconHeight,IconWidth,IconSprites"
+                'Const ContentSelectList = "" _
+                '    & " id,name,active,adminonly,allowadd" _
+                '    & ",allowcalendarevents,allowcontentchildtool,allowcontenttracking,allowdelete" _
+                '    & ",allowtopicrules,AllowWorkflowAuthoring,AuthoringTableID" _
+                '    & ",ContentTableID,DefaultSortMethodID,DeveloperOnly,DropDownFieldList" _
+                '    & ",EditorGroupID,ParentID,ccGuid,IsBaseContent" _
+                '    & ",IconLink,IconHeight,IconWidth,IconSprites"
 
-                Const FieldSelectList = "" _
-                    & "f.ID,f.Name,f.contentid,f.Active,f.AdminOnly,f.Authorable,f.Caption,f.DeveloperOnly,f.EditSortPriority,f.Type,f.HTMLContent" _
-                    & ",f.IndexColumn,f.IndexSortDirection,f.IndexSortPriority,f.RedirectID,f.RedirectPath,f.Required" _
-                    & ",f.TextBuffered,f.UniqueName,f.DefaultValue,f.RSSTitleField,f.RSSDescriptionField,f.MemberSelectGroupID" _
-                    & ",f.EditTab,f.Scramble,f.LookupList,f.NotEditable,f.Password,f.readonly,f.ManyToManyRulePrimaryField" _
-                    & ",f.ManyToManyRuleSecondaryField,'' as HelpMessageDeprecated,f.ModifiedBy,f.IsBaseField,f.LookupContentID" _
-                    & ",f.RedirectContentID,f.ManyToManyContentID,f.ManyToManyRuleContentID" _
-                    & ",h.helpdefault,h.helpcustom,f.IndexWidth"
+                'Const FieldSelectList = "" _
+                '    & "f.ID,f.Name,f.contentid,f.Active,f.AdminOnly,f.Authorable,f.Caption,f.DeveloperOnly,f.EditSortPriority,f.Type,f.HTMLContent" _
+                '    & ",f.IndexColumn,f.IndexSortDirection,f.IndexSortPriority,f.RedirectID,f.RedirectPath,f.Required" _
+                '    & ",f.TextBuffered,f.UniqueName,f.DefaultValue,f.RSSTitleField,f.RSSDescriptionField,f.MemberSelectGroupID" _
+                '    & ",f.EditTab,f.Scramble,f.LookupList,f.NotEditable,f.Password,f.readonly,f.ManyToManyRulePrimaryField" _
+                '    & ",f.ManyToManyRuleSecondaryField,'' as HelpMessageDeprecated,f.ModifiedBy,f.IsBaseField,f.LookupContentID" _
+                '    & ",f.RedirectContentID,f.ManyToManyContentID,f.ManyToManyRuleContentID" _
+                '    & ",h.helpdefault,h.helpcustom,f.IndexWidth"
 
                 '
                 Dim IsBaseContent As Boolean
@@ -82,31 +82,24 @@ Namespace Contensive.Addons.aoCollectionExporter
                 Dim EditorGroupName As String
                 Dim ParentID As Integer
                 Dim ParentName As String
-                Dim ContentID As Integer
                 Dim sb As New System.Text.StringBuilder
-                Dim iContentName As String
                 Dim SQL As String
                 Dim FoundMenuTable As Boolean
                 Dim appName As String
                 Dim cs As CPCSBaseClass = cp.CSNew()
                 '
                 appName = cp.Site.Name
-                iContentName = ContentName
-                If iContentName <> "" Then
-                    SQL = "select id from cccontent where name=" & cp.Db.EncodeSQLText(iContentName)
+                Dim contentId As Integer = 0
+                If contentName <> "" Then
+                    SQL = "select id from cccontent where name=" & cp.Db.EncodeSQLText(contentName)
                     If cs.OpenSQL(SQL) Then
                         ContentID = cs.GetInteger("id")
                     End If
                     Call cs.Close()
                 End If
-                If iContentName <> "" And (ContentID = 0) Then
-                    '
-                    ' export requested for content name that does not exist - return blank
-                    '
-                Else
+                If True Then
                     '
                     ' Build table lookup
-                    '
                     Dim tables As New Dictionary(Of Integer, tableClass)
                     SQL = "select T.ID,T.Name as TableName,D.Name as DataSourceName from ccTables T Left Join ccDataSources D on D.ID=T.DataSourceID"
                     If cs.OpenSQL(SQL) Then
@@ -156,35 +149,13 @@ Namespace Contensive.Addons.aoCollectionExporter
                         Loop While cs.OK()
                     End If
                     Call cs.Close()
-                    ''
-                    '' select all the fields
-                    ''
-                    'If ContentID <> 0 Then
-                    '    SQL = "select " & FieldSelectList & "" _
-                    '        & " from ccfields f left join ccfieldhelp h on h.fieldid=f.id" _
-                    '        & " where (f.Type<>0)and(f.contentid=" & ContentID & ")" _
-                    '        & ""
-                    'Else
-                    '    SQL = "select " & FieldSelectList & "" _
-                    '        & " from ccfields f left join ccfieldhelp h on h.fieldid=f.id" _
-                    '        & " where (f.Type<>0)" _
-                    '        & ""
-                    'End If
-                    'If Not IncludeBaseFields Then
-                    '    SQL = SQL & " and ((f.IsBaseField is null)or(f.IsBaseField=0))"
-                    'End If
-                    'SQL = SQL & " order by f.contentid,f.id,h.id desc"
-
-                    'RS = cpCore.app.executeSql(SQL)
-                    'CFields = convertDataTabletoArray(RS)
-                    'CFieldCnt = UBound(CFields, 2) + 1
                     '
                     ' select the content
                     '
                     If ContentID <> 0 Then
-                        SQL = "select " & ContentSelectList & " from ccContent where (id=" & ContentID & ")and(contenttableid is not null)and(contentcontrolid is not null) order by id"
+                        SQL = "select * from ccContent where (id=" & contentId & ")and(contenttableid is not null)and(contentcontrolid is not null) order by id"
                     Else
-                        SQL = "select " & ContentSelectList & " from ccContent where (name<>'')and(name is not null)and(contenttableid is not null)and(contentcontrolid is not null) order by id"
+                        SQL = "select * from ccContent where (name<>'')and(name is not null)and(contenttableid is not null)and(contentcontrolid is not null) order by id"
                     End If
                     Dim csContent As CPCSBaseClass = cp.CSNew()
                     If csContent.OpenSQL(SQL) Then
@@ -192,13 +163,13 @@ Namespace Contensive.Addons.aoCollectionExporter
                         ' ----- <cdef>
                         '
                         IsBaseContent = (csContent.GetBoolean("isBaseContent"))
-                        iContentName = GetRSXMLAttribute(csContent, "Name")
-                        If InStr(1, iContentName, "data sources", vbTextCompare) = 1 Then
-                            iContentName = iContentName
+                        contentName = GetRSXMLAttribute(csContent, "Name")
+                        If InStr(1, contentName, "data sources", vbTextCompare) = 1 Then
+                            contentName = contentName
                         End If
                         ContentID = (csContent.GetInteger("ID"))
                         sb.Append(vbCrLf & vbTab & "<CDef")
-                        sb.Append(" Name=""" & iContentName & """")
+                        sb.Append(" Name=""" & contentName & """")
                         If (Not IsBaseContent) Or IncludeBaseFields Then
                             sb.Append(" Active=""" & GetRSXMLAttribute(csContent, "Active") & """")
                             sb.Append(" AdminOnly=""" & GetRSXMLAttribute(csContent, "AdminOnly") & """")
@@ -209,7 +180,7 @@ Namespace Contensive.Addons.aoCollectionExporter
                             sb.Append(" AllowContentChildTool=""" & GetRSXMLAttribute(csContent, "AllowContentChildTool") & """")
                             sb.Append(" AllowContentTracking=""" & GetRSXMLAttribute(csContent, "AllowContentTracking") & """")
                             sb.Append(" AllowDelete=""" & GetRSXMLAttribute(csContent, "AllowDelete") & """")
-                            sb.Append(" AllowMetaContent=""" & GetRSXMLAttribute(csContent, "AllowMetaContent") & """")
+                            'sb.Append(" AllowMetaContent=""" & GetRSXMLAttribute(csContent, "AllowMetaContent") & """")
                             sb.Append(" AllowTopicRules=""" & GetRSXMLAttribute(csContent, "AllowTopicRules") & """")
                             sb.Append(" AllowWorkflowAuthoring=""" & GetRSXMLAttribute(csContent, "AllowWorkflowAuthoring") & """")
                             '
@@ -295,12 +266,12 @@ Namespace Contensive.Addons.aoCollectionExporter
                         ' create output
                         '
                         If ContentID <> 0 Then
-                            SQL = "select " & FieldSelectList & "" _
+                            SQL = "select *" _
                                 & " from ccfields f left join ccfieldhelp h on h.fieldid=f.id" _
-                                & " where (f.Type<>0)and(f.contentid=" & ContentID & ")" _
+                                & " where (f.Type<>0)and(f.contentid=" & contentId & ")" _
                                 & ""
                         Else
-                            SQL = "select " & FieldSelectList & "" _
+                            SQL = "select *" _
                                 & " from ccfields f left join ccfieldhelp h on h.fieldid=f.id" _
                                 & " where (f.Type<>0)" _
                                 & ""
@@ -355,9 +326,7 @@ Namespace Contensive.Addons.aoCollectionExporter
                                         sb.Append(" ManyToManyRulePrimaryField=""" & CFields.GetText("ManyToManyRulePrimaryField") & """")
                                         sb.Append(" ManyToManyRuleSecondaryField=""" & CFields.GetText("ManyToManyRuleSecondaryField") & """")
                                         sb.Append(" IsModified=""" & (CFields.GetInteger("ModifiedBy") <> 0) & """")
-                                        If True Then
-                                            sb.Append(" IsBaseField=""" & CFields.GetBoolean("IsBaseField") & """")
-                                        End If
+                                        sb.Append(" IsBaseField=""" & CFields.GetBoolean("IsBaseField") & """")
                                         '
                                         RecordName = ""
                                         RecordID = CFields.GetInteger("LookupContentID")
@@ -421,7 +390,7 @@ Namespace Contensive.Addons.aoCollectionExporter
                         sb.Append("</CDef>")
                     End If
                     Call csContent.Close()
-                    If ContentName = "" Then
+                    If contentName = "" Then
                         '
                         ' Add other areas of the CDef file
                         '

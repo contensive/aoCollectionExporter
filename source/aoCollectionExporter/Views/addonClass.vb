@@ -728,6 +728,11 @@ Namespace Contensive.Addons
                     If Trim(OtherXML) <> "" Then
                         collectionXml = collectionXml & vbCrLf & OtherXML
                     End If
+                    '
+                    ' -- v5 templates
+
+                    '
+                    ' -- done, close collection
                     collectionXml = collectionXml & vbCrLf & "</Collection>"
                     Call CS.Close()
                     '
@@ -819,19 +824,20 @@ Namespace Contensive.Addons
                     s = s & GetNodeBoolean("IsInline", CS, "IsInline")
                     '
                     ' -- javascript
-                    s = s & GetNodeText("JSHeadScriptSrc", CS, "JSHeadScriptSrc")
-                    s = s & GetNodeText("JavascriptInHead", CS, "JSFilename")
-                    s = s & GetNodeText("JSBodyScriptSrc", CS, "JSBodyScriptSrc")
-                    s = s & GetNodeText("JavascriptBodyEnd", CS, "JavascriptBodyEnd")
-                    '
-                    ' -- deprecated, skip it if the site does not have the field
-                    If (CS.FieldOK("JavascriptOnLoad")) Then
-                        Dim fieldValue = CS.GetText("JavascriptOnLoad")
-                        If (Not String.IsNullOrEmpty(fieldValue)) Then
-                            s = s & GetNodeText("JavascriptOnLoad", fieldValue)
-                        End If
+                    If (cp.Version < "5") Then
+                        '
+                        ' -- version 4.1 
+                        s = s & GetNodeText("JavascriptOnLoad", CS, "JavascriptOnLoad")
+                        s = s & GetNodeText("JavascriptInHead", CS, "JSFilename")
+                        s = s & GetNodeText("JavascriptBodyEnd", CS, "JavascriptBodyEnd")
+                    Else
+                        '
+                        ' -- version 5.0+
+                        s = s & GetNodeText("JSHeadScriptSrc", CS, "JSHeadScriptSrc")
+                        s = s & GetNodeText("JavascriptInHead", CS, "JSFilename")
+                        s = s & GetNodeText("JSBodyScriptSrc", CS, "JSBodyScriptSrc")
+                        s = s & GetNodeText("JavascriptBodyEnd", CS, "JavascriptBodyEnd")
                     End If
-                    '
                     s = s & GetNodeText("MetaDescription", CS, ("MetaDescription"))
                     s = s & GetNodeText("OtherHeadTags", CS, "OtherHeadTags")
                     '
@@ -1028,13 +1034,11 @@ Namespace Contensive.Addons
         Private Function GetNodeText(NodeName As String, cs As CPCSBaseClass, fieldName As String) As String
             GetNodeText = ""
             Try
-                If cs.FieldOK(fieldName) Then
-                    Dim fieldValue As String = cs.GetText(fieldName)
-                    If (String.IsNullOrEmpty(fieldValue)) Then
-                        GetNodeText = vbCrLf & vbTab & "<" & NodeName & "></" & NodeName & ">"
-                    Else
-                        GetNodeText = vbCrLf & vbTab & "<" & NodeName & ">" & EncodeCData(fieldValue) & "</" & NodeName & ">"
-                    End If
+                Dim fieldValue As String = cs.GetText(fieldName)
+                If (String.IsNullOrEmpty(fieldValue)) Then
+                    GetNodeText = vbCrLf & vbTab & "<" & NodeName & "></" & NodeName & ">"
+                Else
+                    GetNodeText = vbCrLf & vbTab & "<" & NodeName & ">" & EncodeCData(fieldValue) & "</" & NodeName & ">"
                 End If
             Catch ex As Exception
                 errorReport(cp, ex, "getNodeText")
@@ -1082,9 +1086,7 @@ Namespace Contensive.Addons
         '
         Private Function GetNodeBoolean(NodeName As String, cs As CPCSBaseClass, FieldName As String) As String
             Try
-                If (cs.FieldOK(FieldName)) Then
-                    Return GetNodeBoolean(NodeName, cs.GetBoolean(FieldName))
-                End If
+                Return GetNodeBoolean(NodeName, cs.GetBoolean(FieldName))
             Catch ex As Exception
                 errorReport(cp, ex, "GetNodeBoolean")
             End Try

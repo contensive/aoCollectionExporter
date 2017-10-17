@@ -1,0 +1,1972 @@
+﻿
+script to create vb model data -- model data follows the script
+
+
+function m
+	dim cs,c,n
+	set cs = cp.csNew()
+	if ( cs.open( "content" )) then
+		do
+			n = replace( cs.getText( "name" ), " ", "")
+			if ( right( n,1 ) = "s" ) then
+				n = left( n, len( n )-1)
+			end if
+			n = n & "Model"
+			c = c & vbcrlf & vbcrlf & "---------------------------------------------"
+			c = c & vbcrlf & n
+			c = c & vbcrlf & getModelFields( cs.getInteger( "id" ))
+			cs.goNext()
+		loop while cs.ok
+	end if
+	cs.close()
+	call cp.file.saveVirtual( "Models.txt", c )
+	m = "<a href=""" & cp.site.filePath & "Models.txt"">Models.txt</a>"
+end function
+
+function getModelFields( contentId )
+	dim cs, t, p, l, s,d, fieldName
+	set cs = cp.csNew()
+	if ( cs.open( "content fields", "contentid=" & contentid, "name" )) then
+	  do
+		fieldName = cs.getText( "name" )
+		select case lcase( fieldName )
+			case "id"
+				p = p & ""
+			case "contentcontrolid","modifiedby","createdby","createkey","editarchive","editsourceid","editblank"
+				p = p & ""
+			case "modifieddate","dateadded"
+				p = p & ""
+			case "name","sortorder","ccguid"
+				p = p & ""
+			case "active"
+				p = p & ""
+			case else
+				select case cs.getInteger( "type" )
+				  case 13: 
+					' autoincrement (identity)
+					p = p & vbcrlf & "public property " & fieldName & " as Integer"
+				  case 1,7,15: 
+					p = p & vbcrlf & "public property " & fieldName & " as Integer"
+				  case 4:
+					p = p & vbcrlf & "public property " & fieldName & " as Boolean"
+				  case 2,3,6,10,11,16,17,18,19,20,21,22:
+					p = p & vbcrlf & "public property " & fieldName & " as String"
+				  case 5:
+					p = p & vbcrlf & "public property " & fieldName & " as Date"
+				  case 8,14:
+					' ignore
+				  case 9,12:
+					p = p & vbcrlf & "public property " & fieldName & " as Double"
+				end select
+		end select
+		cs.goNext()
+	  loop while cs.ok
+	end if
+	cs.close()
+	getModelFields = p & vbcrlf & l & vbcrlf & s & vbcrlf & d
+end function
+
+
+
+
+---------------------------------------------
+ActivityLogModel
+
+public property link as String
+public property memberid as Integer
+public property message as String
+public property organizationid as Integer
+public property visitid as Integer
+public property visitorid as Integer
+
+
+
+
+---------------------------------------------
+Add-onCollectionCDefRuleModel
+
+public property collectionid as Integer
+public property contentid as Integer
+
+
+
+
+---------------------------------------------
+Add-onCollectionParentRuleModel
+
+public property childid as Integer
+public property parentid as Integer
+
+
+
+
+---------------------------------------------
+Add-onCollectionModel
+
+public property blocknavigatornode as Boolean
+public property contentfilelist as String
+public property datarecordlist as String
+public property execfilelist as String
+public property help as String
+public property helplink as String
+public property lastchangedate as Date
+public property otherxml as String
+public property system as Boolean
+public property updatable as Boolean
+public property wwwfilelist as String
+
+
+
+
+---------------------------------------------
+Add-onContentFieldTypeRuleModel
+
+public property addonid as Integer
+public property contentfieldtypeid as Integer
+
+
+
+
+---------------------------------------------
+Add-onContentTriggerRuleModel
+
+public property addonid as Integer
+public property contentid as Integer
+
+
+
+
+---------------------------------------------
+Add-onEventCatcherModel
+
+public property addonid as Integer
+public property eventid as Integer
+
+
+
+
+---------------------------------------------
+Add-onEventThrowerModel
+
+public property collectionid as Integer
+public property eventid as Integer
+
+
+
+
+---------------------------------------------
+Add-onEventModel
+
+
+
+
+
+---------------------------------------------
+Add-onIncludeRuleModel
+
+public property addonid as Integer
+public property includedaddonid as Integer
+
+
+
+
+---------------------------------------------
+Add-onPageRuleModel
+
+public property addonid as Integer
+public property pageid as Integer
+
+
+
+
+---------------------------------------------
+Add-onTemplateRuleModel
+
+public property addonid as Integer
+public property templateid as Integer
+
+
+
+
+---------------------------------------------
+Add-onModel
+
+public property admin as Boolean
+public property argumentlist as String
+public property asajax as Boolean
+public property blockedittools as Boolean
+public property collectionid as Integer
+public property content as Boolean
+public property copy as String
+public property copytext as String
+public property dotnetclass as String
+public property email as Boolean
+public property filter as Boolean
+public property formxml as String
+public property help as String
+public property helplink as String
+public property iconfilename as String
+public property iconheight as Integer
+public property iconsprites as Integer
+public property iconwidth as Integer
+public property inframe as Boolean
+public property isinline as Boolean
+public property javascriptbodyend as String
+public property jsbodyscriptsrc as String
+public property jsfilename as String
+public property jsheadscriptsrc as String
+public property link as String
+public property metadescription as String
+public property metakeywordlist as String
+public property navtypeid as Integer
+public property objectprogramid as String
+public property onbodyend as Boolean
+public property onbodystart as Boolean
+public property onnewvisitevent as Boolean
+public property onpageendevent as Boolean
+public property onpagestartevent as Boolean
+public property otherheadtags as String
+public property pagetitle as String
+public property processinterval as Integer
+public property processnextrun as Date
+public property processrunonce as Boolean
+public property processserverkey as String
+public property remoteassetlink as String
+public property remotemethod as Boolean
+public property robotstxt as String
+public property scriptingcode as String
+public property scriptingentrypoint as String
+public property scriptinglanguageid as Integer
+public property scriptingtimeout as String
+public property stylesfilename as String
+public property styleslinkhref as String
+public property template as Boolean
+
+
+
+
+---------------------------------------------
+AdminFrameworkReportColumnModel
+
+public property caption as String
+public property captionclass as String
+public property cellclass as String
+public property reportid as Integer
+public property visible as Boolean
+
+
+
+
+---------------------------------------------
+AdminFrameworkReportModel
+
+public property description as String
+public property title as String
+
+
+
+
+---------------------------------------------
+AdminSitePropertieModel
+
+
+
+
+
+---------------------------------------------
+AggregateAccesModel
+
+public property link as String
+
+
+
+
+---------------------------------------------
+AuthoringControlModel
+
+public property contentid as Integer
+public property contentrecordkey as String
+public property controltype as Integer
+public property dateexpires as Date
+public property recordid as Integer
+
+
+
+
+---------------------------------------------
+BlogCategorieModel
+
+public property userblocking as Boolean
+
+
+
+
+---------------------------------------------
+BlogCategoryGroupRuleModel
+
+public property blogcategoryid as Integer
+public property groupid as Integer
+
+
+
+
+---------------------------------------------
+BlogCommentModel
+
+public property allowcomments as Boolean
+public property anonymous as Boolean
+public property approved as Boolean
+public property articleprimaryimagepositionid as Integer
+public property authormemberid as Integer
+public property blogcategoryid as Integer
+public property blogid as Integer
+public property copy as String
+public property entryid as Integer
+public property formkey as String
+public property imagedisplaytypeid as Integer
+public property primaryimagepositionid as Integer
+public property viewings as Integer
+
+
+
+
+---------------------------------------------
+BlogCopyModel
+
+public property allowcomments as Boolean
+public property anonymous as Boolean
+public property approved as Boolean
+public property articleprimaryimagepositionid as Integer
+public property authormemberid as Integer
+public property blogcategoryid as Integer
+public property blogid as Integer
+public property copy as String
+public property copytext as String
+public property entryid as Integer
+public property imagedisplaytypeid as Integer
+public property primaryimagepositionid as Integer
+public property rssdateexpire as Date
+public property rssdatepublish as Date
+public property rssdescription as String
+public property rsslink as String
+public property rsstitle as String
+public property viewings as Integer
+
+
+
+
+---------------------------------------------
+BlogEntrieModel
+
+public property allowcomments as Boolean
+public property approved as Boolean
+public property articleprimaryimagepositionid as Integer
+public property authormemberid as Integer
+public property blogcategoryid as Integer
+public property blogid as Integer
+public property copy as String
+public property copytext as String
+public property entryid as Integer
+public property imagedisplaytypeid as Integer
+public property podcastmedialink as String
+public property podcastsize as Integer
+public property primaryimagepositionid as Integer
+public property rssdateexpire as Date
+public property rssdatepublish as Date
+public property rssdescription as String
+public property rsslink as String
+public property rsstitle as String
+public property taglist as String
+public property viewings as Integer
+
+
+
+
+---------------------------------------------
+BlogEntryCTARuleModel
+
+public property blogentryid as Integer
+public property calltoactionid as Integer
+
+
+
+
+---------------------------------------------
+BlogImageRuleModel
+
+public property blogentryid as Integer
+public property blogimageid as Integer
+
+
+
+
+---------------------------------------------
+BlogImageModel
+
+public property altsizelist as String
+public property description as String
+public property filename as String
+public property height as Integer
+public property width as Integer
+
+
+
+
+---------------------------------------------
+BlogViewingLogModel
+
+public property blogentryid as Integer
+public property memberid as Integer
+public property visitid as Integer
+
+
+
+
+---------------------------------------------
+BlogModel
+
+public property allowanonymous as Boolean
+public property allowarchivelist as Boolean
+public property allowarticlecta as Boolean
+public property allowcategories as Boolean
+public property allowemailsubscribe as Boolean
+public property allowfacebooklink as Boolean
+public property allowgooglepluslink as Boolean
+public property allowrsssubscribe as Boolean
+public property allowsearch as Boolean
+public property allowtwitterlink as Boolean
+public property authoringgroupid as Integer
+public property autoapprovecomments as Boolean
+public property brieffilename as String
+public property caption as String
+public property copy as String
+public property emailcomment as Boolean
+public property emailsubscribegroupid as Integer
+public property facebooklink as String
+public property followuscaption as String
+public property googlepluslink as String
+public property hidecontributer as Boolean
+public property ignorelegacyinstanceoptions as Boolean
+public property imagewidthmax as Integer
+public property overviewlength as Integer
+public property ownermemberid as Integer
+public property poststodisplay as Integer
+public property recaptcha as Boolean
+public property rssfeedid as Integer
+public property thumbnailimagewidth as Integer
+public property twitterlink as String
+
+
+
+
+---------------------------------------------
+CallsToActionModel
+
+public property brief as String
+public property headline as String
+public property link as String
+
+
+
+
+---------------------------------------------
+ConditionalEmailModel
+
+public property sent as Boolean
+public property submitted as Boolean
+public property toall as Boolean
+
+
+
+
+---------------------------------------------
+ContentModel
+
+public property adminonly as Boolean
+public property allowadd as Boolean
+public property allowcontentchildtool as Boolean
+public property allowcontenttracking as Boolean
+public property allowdelete as Boolean
+public property allowtopicrules as Boolean
+public property allowworkflowauthoring as Boolean
+public property authoringtableid as Integer
+public property contenttableid as Integer
+public property defaultsortmethodid as Integer
+public property developeronly as Boolean
+public property dropdownfieldlist as String
+public property editorgroupid as Integer
+public property iconheight as Integer
+public property iconlink as String
+public property iconsprites as Integer
+public property iconwidth as Integer
+public property installedbycollectionid as Integer
+public property isbasecontent as Boolean
+public property parentid as Integer
+
+
+
+
+---------------------------------------------
+ContentFieldHelpModel
+
+public property fieldid as Integer
+public property helpcustom as String
+public property helpdefault as String
+
+
+
+
+---------------------------------------------
+ContentFieldTypeModel
+
+public property editoraddonid as Integer
+
+
+
+
+---------------------------------------------
+ContentFieldModel
+
+public property adminonly as Boolean
+public property authorable as Boolean
+public property caption as String
+public property contentid as Integer
+public property createresourcefilesonroot as Boolean
+public property defaultvalue as String
+public property developeronly as Boolean
+public property editoraddonid as Integer
+public property editsortpriority as Integer
+public property edittab as String
+public property htmlcontent as Boolean
+public property indexcolumn as Integer
+public property indexsortdirection as Integer
+public property indexsortpriority as Integer
+public property indexwidth as String
+public property installedbycollectionid as Integer
+public property lookupcontentid as Integer
+public property lookuplist as String
+public property manytomanycontentid as Integer
+public property manytomanyrulecontentid as Integer
+public property manytomanyruleprimaryfield as String
+public property manytomanyrulesecondaryfield as String
+public property memberselectgroupid as Integer
+public property noteditable as Boolean
+public property password as Boolean
+public property prefixforrootresourcefiles as String
+public property readonly as Boolean
+public property redirectcontentid as Integer
+public property redirectid as String
+public property redirectpath as String
+public property required as Boolean
+public property rssdescriptionfield as Boolean
+public property rsstitlefield as Boolean
+public property scramble as Boolean
+public property textbuffered as Boolean
+public property type as Integer
+public property uniquename as Boolean
+
+
+
+
+---------------------------------------------
+ContentWatchModel
+
+public property allowwhatsnew as Boolean
+public property clicks as Integer
+public property contentid as Integer
+public property contentrecordkey as String
+public property link as String
+public property linklabel as String
+public property recordid as Integer
+public property whatsnewdateexpires as Date
+
+
+
+
+---------------------------------------------
+ContentWatchListRuleModel
+
+public property contentwatchid as Integer
+public property contentwatchlistid as Integer
+
+
+
+
+---------------------------------------------
+ContentWatchListModel
+
+
+
+
+
+---------------------------------------------
+CopyContentModel
+
+public property copy as String
+
+
+
+
+---------------------------------------------
+CountrieModel
+
+public property abbreviation as String
+public property domesticshipping as Boolean
+
+
+
+
+---------------------------------------------
+CustomReportModel
+
+public property sqlquery as String
+
+
+
+
+---------------------------------------------
+DataSourceModel
+
+public property connstring as String
+public property dbtypeid as Integer
+public property endpoint as String
+public property password as String
+public property username as String
+
+
+
+
+---------------------------------------------
+DBContactUModel
+
+public property firstcustomcssclass as Integer
+public property formactionpage as String
+public property formbuttontext as String
+public property formdescription as String
+public property formtitle as String
+public property secondcustomcssclass as Integer
+public property thankyoudescription as String
+public property thankyouredirectpage as String
+public property thankyoureloadseconds as Integer
+public property thankyoutitle as String
+
+
+
+
+---------------------------------------------
+DBContactUsDataModel
+
+public property message as String
+public property userid as Integer
+
+
+
+
+---------------------------------------------
+DBFourTileImageFlipModel
+
+public property backbutton1text as String
+public property backbutton1url as String
+public property backbutton2text as String
+public property backbutton2url as String
+public property backbutton3text as String
+public property backbutton3url as String
+public property backbutton4text as String
+public property backbutton4url as String
+public property backdescription1 as String
+public property backdescription2 as String
+public property backdescription3 as String
+public property backdescription4 as String
+public property backtitle1 as String
+public property backtitle2 as String
+public property backtitle3 as String
+public property backtitle4 as String
+public property description1 as String
+public property description2 as String
+public property description3 as String
+public property description4 as String
+public property firstcustomcssclass as Integer
+public property imagefilename1 as String
+public property imagefilename2 as String
+public property imagefilename3 as String
+public property imagefilename4 as String
+public property secondcustomcssclass as Integer
+public property title1 as String
+public property title2 as String
+public property title3 as String
+public property title4 as String
+
+
+
+
+---------------------------------------------
+DBHeadlineModel
+
+public property buttontext as String
+public property buttonurl as String
+public property description as String
+public property firstcustomcssclass as Integer
+public property secondcustomcssclass as Integer
+public property title as String
+
+
+
+
+---------------------------------------------
+DBHeroImageModel
+
+public property firstcustomcssclass as Integer
+public property pageimagebackgroundurl as String
+public property pageshadecssclass as String
+public property pagesubtitle as String
+public property pagetitle as String
+public property pagetitlebuttontext as String
+public property pagetitlebuttonurl as String
+public property secondcustomcssclass as Integer
+
+
+
+
+---------------------------------------------
+DBInfoPanelModel
+
+public property buttonlink1 as String
+public property buttonlink10 as String
+public property buttonlink11 as String
+public property buttonlink12 as String
+public property buttonlink2 as String
+public property buttonlink3 as String
+public property buttonlink4 as String
+public property buttonlink5 as String
+public property buttonlink6 as String
+public property buttonlink7 as String
+public property buttonlink8 as String
+public property buttonlink9 as String
+public property buttontext1 as String
+public property buttontext10 as String
+public property buttontext11 as String
+public property buttontext12 as String
+public property buttontext2 as String
+public property buttontext3 as String
+public property buttontext4 as String
+public property buttontext5 as String
+public property buttontext6 as String
+public property buttontext7 as String
+public property buttontext8 as String
+public property buttontext9 as String
+public property description1 as String
+public property description10 as String
+public property description11 as String
+public property description12 as String
+public property description2 as String
+public property description3 as String
+public property description4 as String
+public property description5 as String
+public property description6 as String
+public property description7 as String
+public property description8 as String
+public property description9 as String
+public property firstcustomcssclass as Integer
+public property secondcustomcssclass as Integer
+public property title1 as String
+public property title10 as String
+public property title11 as String
+public property title12 as String
+public property title2 as String
+public property title3 as String
+public property title4 as String
+public property title5 as String
+public property title6 as String
+public property title7 as String
+public property title8 as String
+public property title9 as String
+
+
+
+
+---------------------------------------------
+DBSliderModel
+
+public property description1 as String
+public property description10 as String
+public property description2 as String
+public property description3 as String
+public property description4 as String
+public property description5 as String
+public property description6 as String
+public property description7 as String
+public property description8 as String
+public property description9 as String
+public property firstcustomcssclass as Integer
+public property imagefilename1 as String
+public property imagefilename10 as String
+public property imagefilename2 as String
+public property imagefilename3 as String
+public property imagefilename4 as String
+public property imagefilename5 as String
+public property imagefilename6 as String
+public property imagefilename7 as String
+public property imagefilename8 as String
+public property imagefilename9 as String
+public property imagelink1 as String
+public property imagelink10 as String
+public property imagelink2 as String
+public property imagelink3 as String
+public property imagelink4 as String
+public property imagelink5 as String
+public property imagelink6 as String
+public property imagelink7 as String
+public property imagelink8 as String
+public property imagelink9 as String
+public property secondcustomcssclass as Integer
+
+
+
+
+---------------------------------------------
+DBTextAndImageModel
+
+public property description as String
+public property firstcustomcssclass as Integer
+public property imagefilename as String
+public property secondcustomcssclass as Integer
+public property title as String
+
+
+
+
+---------------------------------------------
+DomainModel
+
+public property defaulttemplateid as Integer
+public property forwarddomainid as Integer
+public property forwardurl as String
+public property nofollow as Boolean
+public property pagenotfoundpageid as Integer
+public property rootpageid as Integer
+public property typeid as Integer
+public property visited as Boolean
+
+
+
+
+---------------------------------------------
+DynamicMenuModel
+
+public property delimiter as String
+public property depth as Integer
+public property flyoutdirection as Integer
+public property flyoutonhover as Boolean
+public property layout as Integer
+public property styleprefix as String
+public property stylesfilename as String
+
+
+
+
+---------------------------------------------
+EmailModel
+
+public property addlinkeid as Boolean
+public property allowspamfooter as Boolean
+public property conditionexpiredate as Date
+public property conditionid as Integer
+public property conditionperiod as Integer
+public property copyfilename as String
+public property emailtemplateid as Integer
+public property emailwizardid as Integer
+public property fromaddress as String
+public property lastsendtestdate as Date
+public property scheduledate as Date
+public property sent as Boolean
+public property subject as String
+public property submitted as Boolean
+public property testmemberid as Integer
+public property toall as Boolean
+
+
+
+
+---------------------------------------------
+EmailDropModel
+
+public property emailid as Integer
+
+
+
+
+---------------------------------------------
+EmailGroupModel
+
+public property emailid as Integer
+public property groupid as Integer
+
+
+
+
+---------------------------------------------
+EmailLogModel
+
+public property dateblockexpires as Date
+public property emaildropid as Integer
+public property emailid as Integer
+public property fromaddress as String
+public property logtype as Integer
+public property memberid as Integer
+public property sendstatus as String
+public property subject as String
+public property toaddress as String
+public property visitid as Integer
+
+
+
+
+---------------------------------------------
+EmailTemplateModel
+
+public property bodyhtml as String
+public property source as String
+
+
+
+
+---------------------------------------------
+EmailTopicModel
+
+public property emailid as Integer
+public property topicid as Integer
+
+
+
+
+---------------------------------------------
+EmailWizardModel
+
+public property allowspamfooterdefault as Boolean
+public property contentforminstructions as String
+public property defaultconditionperiod as Integer
+public property defaultcontent as String
+public property defaulttemplateid as Integer
+public property emailtypeid as Integer
+public property groupforminstructions as String
+public property includeallowspamfooter as Boolean
+public property includeconditionperiod as Boolean
+public property includecontentform as Boolean
+public property includegroupform as Boolean
+public property includelinkauthentication as Boolean
+public property includeschedule as Boolean
+public property includetemplateform as Boolean
+public property linkauthenticationdefault as Boolean
+public property templateforminstructions as String
+
+
+
+
+---------------------------------------------
+FormFieldModel
+
+public property buttonactionid as Integer
+public property caption as String
+public property contentfieldid as Integer
+public property formid as Integer
+public property inputtype as String
+public property replacetext as String
+public property required as Boolean
+
+
+
+
+---------------------------------------------
+FormPageModel
+
+public property body as String
+public property instructions as String
+
+
+
+
+---------------------------------------------
+FormSetModel
+
+public property joingroupid as Integer
+public property notificationemailid as Integer
+public property responseemailid as Integer
+public property thankyoucopy as String
+
+
+
+
+---------------------------------------------
+FormModel
+
+public property addbackbutton as Boolean
+public property addcancelbutton as Boolean
+public property addcontinuebutton as Boolean
+public property backbuttonname as String
+public property cancelbuttonname as String
+public property contentid as Integer
+public property continuebuttonname as String
+public property formsetid as Integer
+public property htmlbody as String
+public property newcontentname as String
+public property nextformid as Integer
+public property useauthmembercontent as Boolean
+public property useauthorgcontent as Boolean
+
+
+
+
+---------------------------------------------
+GroupEmailModel
+
+public property conditionexpiredate as Date
+public property conditionid as Integer
+public property conditionperiod as Integer
+public property sent as Boolean
+public property submitted as Boolean
+
+
+
+
+---------------------------------------------
+GroupRuleModel
+
+public property allowadd as Boolean
+public property allowdelete as Boolean
+public property contentid as Integer
+public property groupid as Integer
+
+
+
+
+---------------------------------------------
+GroupModel
+
+public property allowbulkemail as Boolean
+public property caption as String
+public property copyfilename as String
+public property publicjoin as Boolean
+
+
+
+
+---------------------------------------------
+ImageModel
+
+public property align as String
+public property caption as String
+public property clicks as Integer
+public property clicksmax as Integer
+public property dateexpires as Date
+public property height as Integer
+public property imagefilename as String
+public property lastviewdate as Date
+public property link as String
+public property newwindow as Boolean
+public property thumbnailfilename as String
+public property thumbnailheight as Integer
+public property thumbnailwidth as Integer
+public property viewings as Integer
+public property viewingsmax as Integer
+public property width as Integer
+
+
+
+
+---------------------------------------------
+ImportWizardTaskModel
+
+public property datecompleted as Date
+public property datestarted as Date
+public property importmapfilename as String
+public property notifyemail as String
+public property resultmessage as String
+public property uploadfilename as String
+
+
+
+
+---------------------------------------------
+LanguageModel
+
+public property http_accept_language as String
+
+
+
+
+---------------------------------------------
+LayoutModel
+
+public property layout as String
+
+
+
+
+---------------------------------------------
+LibraryFileLogModel
+
+public property fileid as Integer
+public property memberid as Integer
+public property visitid as Integer
+
+
+
+
+---------------------------------------------
+LibraryFileTypeModel
+
+public property downloadiconfilename as String
+public property extensionlist as String
+public property iconfilename as String
+public property isdownload as Boolean
+public property isflash as Boolean
+public property isimage as Boolean
+public property isvideo as Boolean
+public property mediaiconfilename as String
+
+
+
+
+---------------------------------------------
+LibraryFileModel
+
+public property altsizelist as String
+public property alttext as String
+public property clicks as Integer
+public property description as String
+public property filename as String
+public property filesize as Integer
+public property filetypeid as Integer
+public property folderid as Integer
+public property height as String
+public property width as String
+
+
+
+
+---------------------------------------------
+LibraryFolderRuleModel
+
+public property folderid as Integer
+public property groupid as Integer
+
+
+
+
+---------------------------------------------
+LibraryFolderModel
+
+public property description as String
+public property parentid as Integer
+
+
+
+
+---------------------------------------------
+LinkAliaseModel
+
+public property pageid as Integer
+public property querystringsuffix as String
+
+
+
+
+---------------------------------------------
+LinkForwardModel
+
+public property destinationlink as String
+public property groupid as Integer
+public property sourcelink as String
+public property viewings as Integer
+
+
+
+
+---------------------------------------------
+LPCustomCsModel
+
+public property csstext as String
+
+
+
+
+---------------------------------------------
+LPFourImageModel
+
+public property firstcustomcssclass as Integer
+public property image1explanation as String
+public property image1filename as String
+public property image1title as String
+public property image1url as String
+public property image2explanation as String
+public property image2filename as String
+public property image2title as String
+public property image2url as String
+public property image3explanation as String
+public property image3filename as String
+public property image3title as String
+public property image3url as String
+public property image4explanation as String
+public property image4filename as String
+public property image4title as String
+public property image4url as String
+public property secondcustomcssclass as Integer
+
+
+
+
+---------------------------------------------
+LPHomePage3BlockModel
+
+public property buttonlink1 as String
+public property buttonlink2 as String
+public property buttonlink3 as String
+public property buttontext1 as String
+public property buttontext2 as String
+public property buttontext3 as String
+public property description1 as String
+public property description2 as String
+public property description3 as String
+public property firstcustomcssclass as Integer
+public property secondcustomcssclass as Integer
+public property title1 as String
+public property title2 as String
+public property title3 as String
+
+
+
+
+---------------------------------------------
+LPHomePageTestimonialModel
+
+public property author1 as String
+public property author1picture as String
+public property author2 as String
+public property author2picture as String
+public property buttontext as String
+public property buttonurl as String
+public property firstcustomcssclass as Integer
+public property quote1 as String
+public property quote2 as String
+public property secondcustomcssclass as Integer
+
+
+
+
+---------------------------------------------
+LPHomePageTextwithVideoModel
+
+public property description as String
+public property firstcustomcssclass as Integer
+public property heightvideo as Integer
+public property secondcustomcssclass as Integer
+public property withvideo as Integer
+public property youtubeurl as String
+
+
+
+
+---------------------------------------------
+LPSignUpEmailModel
+
+public property firstcustomcssclass as Integer
+public property formactionpage as String
+public property formbuttontext as String
+public property formdescription as String
+public property secondcustomcssclass as Integer
+public property thankyoudescription as String
+public property thankyouredirectpage as String
+public property thankyoureloadseconds as Integer
+public property thankyoutitle as String
+
+
+
+
+---------------------------------------------
+LPThreeBlockImageModel
+
+public property firstcustomcssclass as Integer
+public property image1filename as String
+public property image1text as String
+public property image1url as String
+public property image2filename as String
+public property image2text as String
+public property image2url as String
+public property image3filename as String
+public property image3text as String
+public property image3url as String
+public property secondcustomcssclass as Integer
+public property sectionheadertext as String
+
+
+
+
+---------------------------------------------
+MemberRuleModel
+
+public property dateexpires as Date
+public property groupid as Integer
+public property memberid as Integer
+
+
+
+
+---------------------------------------------
+MemberTopicRuleModel
+
+public property memberid as Integer
+public property topicid as Integer
+
+
+
+
+---------------------------------------------
+MemberModel
+
+
+
+
+
+---------------------------------------------
+MenuPageRuleModel
+
+public property menuid as Integer
+public property pageid as Integer
+
+
+
+
+---------------------------------------------
+MenuModel
+
+public property addroottotier as Boolean
+public property classflyoutparent as String
+public property classitemactive as String
+public property classitemfirst as String
+public property classitemhover as String
+public property classitemlast as String
+public property classtieritem as String
+public property classtierlist as String
+public property classtopitem as String
+public property classtoplist as String
+public property classtopwrapper as String
+public property depth as Integer
+
+
+
+
+---------------------------------------------
+NavigatorEntrieModel
+
+public property addonid as Integer
+public property adminonly as Boolean
+public property contentid as Integer
+public property developeronly as Boolean
+public property helpaddonid as Integer
+public property helpcollectionid as Integer
+public property installedbycollectionid as Integer
+public property linkpage as String
+public property navicontitle as String
+public property navicontype as Integer
+public property newwindow as Boolean
+public property parentid as Integer
+
+
+
+
+---------------------------------------------
+OrganizationModel
+
+public property address1 as String
+public property address2 as String
+public property brieffilename as String
+public property city as String
+public property clicks as Integer
+public property contactmemberid as Integer
+public property copyfilename as String
+public property country as String
+public property email as String
+public property fax as String
+public property imagefilename as String
+public property link as String
+public property phone as String
+public property state as String
+public property thumbnailfilename as String
+public property viewings as Integer
+public property web as String
+public property zip as String
+
+
+
+
+---------------------------------------------
+PageContentModel
+
+public property allowbrief as Boolean
+public property allowchildlistdisplay as Boolean
+public property allowemailpage as Boolean
+public property allowfeedback as Boolean
+public property allowhitnotification as Boolean
+public property allowinchildlists as Boolean
+public property allowinmenus as Boolean
+public property allowlastmodifiedfooter as Boolean
+public property allowmessagefooter as Boolean
+public property allowmetacontentnofollow as Boolean
+public property allowmoreinfo as Boolean
+public property allowprinterversion as Boolean
+public property allowreturnlinkdisplay as Boolean
+public property allowreviewedfooter as Boolean
+public property allowseealso as Boolean
+public property alternatecontentid as Integer
+public property alternatecontentlink as String
+public property archiveparentid as Integer
+public property blockcontent as Boolean
+public property blockpage as Boolean
+public property blocksourceid as Integer
+public property brieffilename as String
+public property childlistinstanceoptions as String
+public property childlistsortmethodid as Integer
+public property childpagesfound as Boolean
+public property clicks as Integer
+public property contactmemberid as Integer
+public property contentpadding as Integer
+public property copyfilename as String
+public property customblockmessage as String
+public property datearchive as Date
+public property dateexpires as Date
+public property datereviewed as Date
+public property docfilename as String
+public property doclabel as String
+public property headline as String
+public property imagefilename as String
+public property issecure as Boolean
+public property jsendbody as String
+public property jsfilename as String
+public property jshead as String
+public property jsonload as String
+public property link as String
+public property linkalias as String
+public property linklabel as String
+public property marquee as String
+public property menuheadline as String
+public property menuimagefilename as String
+public property metadescription as String
+public property metakeywordlist as String
+public property organizationid as Integer
+public property otherheadtags as String
+public property pagelink as String
+public property pagetitle as String
+public property parentid as Integer
+public property parentlistname as String
+public property podcastmedialink as String
+public property podcastsize as Integer
+public property pubdate as Date
+public property registrationgroupid as Integer
+public property registrationrequired as Boolean
+public property reviewedby as Integer
+public property rssdateexpire as Date
+public property rssdatepublish as Date
+public property rssdescription as String
+public property rsslink as String
+public property rsstitle as String
+public property templateid as Integer
+public property triggeraddgroupid as Integer
+public property triggerconditiongroupid as Integer
+public property triggerconditionid as Integer
+public property triggerremovegroupid as Integer
+public property triggersendsystememailid as Integer
+public property viewings as Integer
+
+
+
+
+---------------------------------------------
+PageContentBlockRuleModel
+
+public property groupid as Integer
+public property recordid as Integer
+
+
+
+
+---------------------------------------------
+PageContentTopicRuleModel
+
+public property pageid as Integer
+public property topicid as Integer
+
+
+
+
+---------------------------------------------
+PageTemplateModel
+
+public property bodyhtml as String
+public property issecure as Boolean
+public property source as String
+
+
+
+
+---------------------------------------------
+PageViewSummaryModel
+
+public property authenticatedpageviews as Integer
+public property botpageviews as Integer
+public property datenumber as Integer
+public property mobilepageviews as Integer
+public property nocookiepageviews as Integer
+public property pageid as Integer
+public property pagetitle as String
+public property pageviews as Integer
+public property timeduration as Integer
+public property timenumber as Integer
+
+
+
+
+---------------------------------------------
+PeopleModel
+
+public property address as String
+public property address2 as String
+public property admin as Boolean
+public property adminmenumodeid as Integer
+public property allowbulkemail as Boolean
+public property allowtoolspanel as Boolean
+public property authorinfolink as String
+public property autologin as Boolean
+public property billaddress as String
+public property billaddress2 as String
+public property billcity as String
+public property billcompany as String
+public property billcountry as String
+public property billemail as String
+public property billfax as String
+public property billname as String
+public property billphone as String
+public property billstate as String
+public property billzip as String
+public property birthdayday as Integer
+public property birthdaymonth as Integer
+public property birthdayyear as Integer
+public property city as String
+public property company as String
+public property country as String
+public property createdbyvisit as Boolean
+public property dateexpires as Date
+public property developer as Boolean
+public property email as String
+public property excludefromanalytics as Boolean
+public property fax as String
+public property firstname as String
+public property imagefilename as String
+public property languageid as Integer
+public property lastname as String
+public property lastvisit as Date
+public property nickname as String
+public property notesfilename as String
+public property organizationid as Integer
+public property password as String
+public property phone as String
+public property resumefilename as String
+public property shipaddress as String
+public property shipaddress2 as String
+public property shipcity as String
+public property shipcompany as String
+public property shipcountry as String
+public property shipname as String
+public property shipphone as String
+public property shipstate as String
+public property shipzip as String
+public property state as String
+public property thumbnailfilename as String
+public property title as String
+public property username as String
+public property visits as Integer
+public property zip as String
+
+
+
+
+---------------------------------------------
+PortalFeatureModel
+
+public property addonid as Integer
+public property addpadding as Boolean
+public property datacontentid as Integer
+public property heading as String
+public property parentfeatureid as Integer
+public property portalid as Integer
+
+
+
+
+---------------------------------------------
+PortalLinkModel
+
+public property fromportalid as Integer
+public property toportalid as Integer
+
+
+
+
+---------------------------------------------
+PortalModel
+
+public property defaultconfigjson as String
+public property defaultfeatureid as Integer
+
+
+
+
+---------------------------------------------
+PropertieModel
+
+public property fieldvalue as String
+public property keyid as Integer
+public property typeid as Integer
+
+
+
+
+---------------------------------------------
+RemoteQuerieModel
+
+public property allowinactiverecords as Boolean
+public property contentid as Integer
+public property criteria as String
+public property datasourceid as Integer
+public property dateexpires as Date
+public property maxrows as Integer
+public property querytypeid as Integer
+public property remotekey as String
+public property selectfieldlist as String
+public property sortfieldlist as String
+public property sqlquery as String
+public property visitid as Integer
+
+
+
+
+---------------------------------------------
+ReportRuleModel
+
+public property address as String
+public property browser as String
+
+
+
+
+---------------------------------------------
+RSSAggregatorSourceRuleModel
+
+public property aggregatorid as Integer
+public property sourceid as Integer
+
+
+
+
+---------------------------------------------
+RSSAggregatorSourceStorieModel
+
+public property description as String
+public property itemguid as String
+public property link as String
+public property pubdate as Date
+public property sourceid as Integer
+
+
+
+
+---------------------------------------------
+RSSAggregatorSourceModel
+
+public property link as String
+
+
+
+
+---------------------------------------------
+RSSAggregatorModel
+
+
+
+
+
+---------------------------------------------
+RSSFeedBlogRuleModel
+
+public property blogpostid as Integer
+public property rssfeedid as Integer
+
+
+
+
+---------------------------------------------
+RSSFeedRuleModel
+
+public property pageid as Integer
+public property rssfeedid as Integer
+
+
+
+
+---------------------------------------------
+RSSFeedModel
+
+public property copyright as String
+public property description as String
+public property link as String
+public property logofilename as String
+public property rssdateupdated as Date
+public property rssfilename as String
+
+
+
+
+---------------------------------------------
+ScriptingLanguageModel
+
+
+
+
+
+---------------------------------------------
+SeeAlsoModel
+
+public property brief as String
+public property contentid as Integer
+public property link as String
+public property recordid as Integer
+
+
+
+
+---------------------------------------------
+SitePropertieModel
+
+public property fieldvalue as String
+
+
+
+
+---------------------------------------------
+SiteWarningModel
+
+public property count as Integer
+public property datelastreported as Date
+public property description as String
+public property generalkey as String
+public property location as String
+public property pageid as Integer
+public property shortdescription as String
+public property specifickey as String
+
+
+
+
+---------------------------------------------
+SortMethodModel
+
+public property orderbyclause as String
+
+
+
+
+---------------------------------------------
+StateModel
+
+public property abbreviation as String
+public property countryid as Integer
+public property fipsstate as String
+public property salestax as Double
+public property stateregionid as Integer
+
+
+
+
+---------------------------------------------
+SystemEmailModel
+
+public property conditionexpiredate as Date
+public property conditionid as Integer
+public property conditionperiod as Integer
+public property scheduledate as Date
+public property sent as Boolean
+public property submitted as Boolean
+public property toall as Boolean
+
+
+
+
+---------------------------------------------
+TableModel
+
+public property datasourceid as Integer
+
+
+
+
+---------------------------------------------
+TaskModel
+
+public property cmddetail as String
+public property cmdrunner as String
+public property command as String
+public property datasource as String
+public property datecompleted as Date
+public property datestarted as Date
+public property filename as String
+public property importmapfilename as String
+public property notifyemail as String
+public property resultmessage as String
+public property sqlquery as String
+
+
+
+
+---------------------------------------------
+TemplateDomainRuleModel
+
+public property domainid as Integer
+public property templateid as Integer
+
+
+
+
+---------------------------------------------
+TopicHabitModel
+
+public property contentrecordkey as String
+public property memberid as Integer
+public property score as Integer
+public property topicid as Integer
+public property visitid as Integer
+
+
+
+
+---------------------------------------------
+TopicModel
+
+public property allowbulkemail as Boolean
+public property publicjoin as Boolean
+
+
+
+
+---------------------------------------------
+TrapLogModel
+
+public property copyfilename as String
+public property host as String
+public property page as String
+public property path as String
+public property resolution as String
+public property resolved as Boolean
+
+
+
+
+---------------------------------------------
+UserFormResponseModel
+
+public property copy as String
+public property visitid as Integer
+
+
+
+
+---------------------------------------------
+ViewingModel
+
+public property excludefromanalytics as Boolean
+public property form as String
+public property host as String
+public property memberid as Integer
+public property page as String
+public property pagetime as Integer
+public property pagetitle as String
+public property path as String
+public property querystring as String
+public property recordid as Integer
+public property referer as String
+public property stateok as Boolean
+public property visitid as Integer
+public property visitorid as Integer
+
+
+
+
+---------------------------------------------
+VisitSummaryModel
+
+public property authenticatedvisits as Integer
+public property avetimeonsite as Integer
+public property botvisits as Integer
+public property datenumber as Integer
+public property mobilevisits as Integer
+public property newvisitorvisits as Integer
+public property nocookievisits as Integer
+public property pagesviewed as Integer
+public property singlepagevisits as Integer
+public property timeduration as Integer
+public property timenumber as Integer
+public property visits as Integer
+
+
+
+
+---------------------------------------------
+VisitorModel
+
+public property forcebrowsermobile as Integer
+public property memberid as Integer
+public property orderid as Integer
+
+
+
+
+---------------------------------------------
+VisitModel
+
+public property bot as Boolean
+public property browser as String
+public property cookiesupport as Boolean
+public property excludefromanalytics as Boolean
+public property http_from as String
+public property http_referer as String
+public property http_via as String
+public property lastvisittime as Date
+public property loginattempts as Integer
+public property memberid as Integer
+public property membernew as Boolean
+public property mobile as Boolean
+public property pagevisits as Integer
+public property refererpathpage as String
+public property remote_addr as String
+public property remotename as String
+public property startdatevalue as Integer
+public property starttime as Date
+public property stoptime as Date
+public property timetolasthit as Integer
+public property verbosereporting as Boolean
+public property visitauthenticated as Boolean
+public property visitorid as Integer
+public property visitornew as Boolean
+
+
+
+
+---------------------------------------------
+WrapperModel
+
+public property copytext as String
+public property javascriptbodyend as String
+public property javascriptinhead as String
+public property jsfilename as String
+public property otherheadtags as String
+public property stylesfilename as String
+public property targetstring as String
+
