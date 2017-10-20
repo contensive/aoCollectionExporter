@@ -597,7 +597,7 @@ Namespace Contensive.Addons
                     '
                     ' shared styles
                     '
-                    If (cp.Version < "5") Then
+                    If (Controllers.genericController.buildVersion(cp) < "5") Then
                         Dim recordGuids() As String
                         Dim recordGuid As String
                         If (IncludeSharedStyleGuidList <> "") Then
@@ -824,7 +824,7 @@ Namespace Contensive.Addons
                     s = s & GetNodeBoolean("IsInline", CS, "IsInline")
                     '
                     ' -- javascript
-                    If (cp.Version < "5") Then
+                    If (Controllers.genericController.buildVersion(cp) < "5") Then
                         '
                         ' -- version 4.1 
                         s = s & GetNodeText("JavascriptOnLoad", CS, "JavascriptOnLoad")
@@ -871,7 +871,7 @@ Namespace Contensive.Addons
                     s = s & GetNodeText("Styles", CS, "StylesFilename")
                     s = s & GetNodeText("StylesLinkHref", CS, "StylesLinkHref")
                     '
-                    If cp.Version > "5" Then
+                    If (Controllers.genericController.buildVersion(cp) > "5") Then
                         '
                         ' -- v5 does not support styles in block or custom styles 
                         Styles = Trim(CS.GetText("StylesFilename"))
@@ -895,7 +895,7 @@ Namespace Contensive.Addons
                     '
                     ' Scripting
                     '
-                    If cp.Version > "5" Then
+                    If (Controllers.genericController.buildVersion(cp) > "5") Then
                         '
                         ' -- version 5+
                         s = s & vbCrLf & vbTab & "<Scripting Language=""" & CS.GetText("ScriptingLanguageID") & """ EntryPoint=""" & CS.GetText("ScriptingEntryPoint") & """ Timeout=""" & CS.GetText("ScriptingTimeout") & """/>"
@@ -932,7 +932,7 @@ Namespace Contensive.Addons
                     '
                     ' Shared Styles
                     '
-                    If (cp.Version > "5") Then
+                    If (Controllers.genericController.buildVersion(cp) > "5") Then
                         '
                         ' -- not supported in version 5
                     Else
