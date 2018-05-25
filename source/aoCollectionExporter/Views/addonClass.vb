@@ -1475,7 +1475,8 @@ Namespace Contensive.Addons
                         target = Mid(Source, posStart, posEnd - posStart + Len("</textarea>"))
                         post = Mid(Source, posEnd + Len("</textarea>"))
                     End If
-                    tabIndent = tabIndent(pre) & target & tabIndent(post)
+                    tabIndent = pre & target & post
+                    'tabIndent = tabIndent(pre) & target & tabIndent(post)
                 End If
             Else
                 '
@@ -1490,7 +1491,8 @@ Namespace Contensive.Addons
                     target = Mid(Source, posStart, posEnd - posStart + Len("]]>"))
                     post = Mid(Source, posEnd + 3)
                 End If
-                tabIndent = tabIndent(pre) & target & tabIndent(post)
+                tabIndent = pre & target & post
+                'tabIndent = tabIndent(pre) & target & tabIndent(post)
             End If
             '    kmaIndent = Source
             '    If InStr(1, kmaIndent, "<textarea", vbTextCompare) = 0 Then
