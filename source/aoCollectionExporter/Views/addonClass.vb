@@ -8,6 +8,7 @@ Imports System.Text
 Imports Contensive.BaseClasses
 Imports Contensive.Addons.aoCollectionExporter
 Imports ICSharpCode.SharpZipLib
+Imports System.IO
 
 Namespace Contensive.Addons
     Public Class aoCollectionExporterClass
@@ -165,7 +166,7 @@ Namespace Contensive.Addons
                 Dim TestString As String
                 Dim FieldName As String
                 Dim FieldNodes As String
-                Dim RecordNodes As String
+                Dim RecordNode As String
                 Dim Modules() As String
                 Dim ModuleGuid As String
                 Dim Code As String
@@ -216,9 +217,6 @@ Namespace Contensive.Addons
                     CollectionName = CS.GetText("name")
                     isUpdatable = CS.GetBoolean("updatable")
                     blockNavigatorNode = CS.GetBoolean("blockNavigatorNode")
-                    collectionXml = "" _
-                            & "<?xml version=""1.0"" encoding=""windows-1252""?>" _
-                            & vbCrLf & "<Collection name=""" & cp.Utils.EncodeHTML(CollectionName) & """ guid=""" & CollectionGuid & """ system=""" & kmaGetYesNo(CS.GetBoolean("system")) & """ updatable=""" & kmaGetYesNo(isUpdatable) & """ blockNavigatorNode=""" & kmaGetYesNo(blockNavigatorNode) & """>"
                     '
                     ' Archive Filenames
                     '
@@ -240,6 +238,16 @@ Namespace Contensive.Addons
                     '
                     Call cp.File.Delete(ArchiveFilename)
                     '
+                    collectionXml = "" _
+                            & "<?xml version=""1.0"" encoding=""windows-1252""?>" _
+                            & vbCrLf & "<Collection name=""" & cp.Utils.EncodeHTML(CollectionName) & """ guid=""" & CollectionGuid & """ system=""" & kmaGetYesNo(CS.GetBoolean("system")) & """ updatable=""" & kmaGetYesNo(isUpdatable) & """ blockNavigatorNode=""" & kmaGetYesNo(blockNavigatorNode) & """>"
+                    If File.Exists(InstallFilename) Then
+                        File.Delete(InstallFilename)
+                    End If
+                    Using sw As StreamWriter = File.CreateText(InstallFilename)
+                        sw.WriteLine(collectionXml)
+                        collectionXml = ""
+                    End Using
                     '
                     ' Build executable file list Resource Node so executables can be added to addons for Version40compatibility
                     '   but save it for the end, executableFileList
@@ -293,10 +301,11 @@ Namespace Contensive.Addons
                     '
                     Dim HelpLink As String = CS.GetText("HelpLink")
                     collectionXml = collectionXml & vbCrLf & vbTab & "<HelpLink>" & cp.Utils.EncodeHTML(HelpLink) & "</HelpLink>"
-                    '
-                    ' Help
-                    '
                     collectionXml = collectionXml & vbCrLf & vbTab & "<Help>" & cp.Utils.EncodeHTML(CS.GetText("Help")) & "</Help>"
+                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                        sw.WriteLine(collectionXml)
+                        collectionXml = ""
+                    End Using
                     '
                     ' Addons
                     '
@@ -305,6 +314,10 @@ Namespace Contensive.Addons
                         collectionXml = collectionXml & GetAddonNode(CS2.GetInteger("id"), IncludeModuleGuidList, IncludeSharedStyleGuidList)
                         Call CS2.GoNext()
                     Loop
+                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                        sw.WriteLine(collectionXml)
+                        collectionXml = ""
+                    End Using
                     '
                     ' Data Records
                     '
@@ -312,7 +325,12 @@ Namespace Contensive.Addons
                     DataRecordList = CS.GetText("DataRecordList")
                     If DataRecordList <> "" Then
                         DataRecords = Split(DataRecordList, vbCrLf)
-                        RecordNodes = ""
+                        RecordNode = ""
+                        collectionXml = "<data>"
+                        Using sw As StreamWriter = File.AppendText(InstallFilename)
+                            sw.WriteLine(collectionXml)
+                            collectionXml = ""
+                        End Using
                         For Ptr = 0 To UBound(DataRecords)
                             FieldNodes = ""
                             DataRecordName = ""
@@ -324,8 +342,8 @@ Namespace Contensive.Addons
                                     DataContentName = Trim(DataSplit(0))
                                     DataContentId = cp.Content.GetID(DataContentName)
                                     If DataContentId <= 0 Then
-                                        RecordNodes = "" _
-                                                & RecordNodes _
+                                        RecordNode = "" _
+                                                & RecordNode _
                                                 & vbCrLf & vbTab & "<!-- data missing, content not found during export, content=""" & DataContentName & """ guid=""" & DataRecordGuid & """ name=""" & DataRecordName & """ -->"
                                     Else
                                         supportsGuid = cp.Content.IsField(DataContentName, "ccguid")
@@ -378,8 +396,8 @@ Namespace Contensive.Addons
                                             End If
                                         End If
                                         If Not CSData.Open(DataContentName, Criteria, "id") Then
-                                            RecordNodes = "" _
-                                                    & RecordNodes _
+                                            RecordNode = "" _
+                                                    & RecordNode _
                                                     & vbCrLf & vbTab & "<!-- data missing, record not found during export, content=""" & DataContentName & """ guid=""" & DataRecordGuid & """ name=""" & DataRecordName & """ -->"
                                         Else
                                             '
@@ -513,11 +531,14 @@ Namespace Contensive.Addons
                                                     End Select
                                                     FieldNodes = FieldNodes & vbCrLf & vbTab & "<field name=""" & cp.Utils.EncodeHTML(FieldName) & """>" & FieldValue & "</field>"
                                                 Next
-                                                RecordNodes = "" _
-                                                        & RecordNodes _
+                                                RecordNode = "" _
                                                         & vbCrLf & vbTab & "<record content=""" & cp.Utils.EncodeHTML(DataContentName) & """ guid=""" & DataRecordGuid & """ name=""" & cp.Utils.EncodeHTML(DataRecordName) & """>" _
                                                         & tabIndent(FieldNodes) _
                                                         & vbCrLf & vbTab & "</record>"
+                                                Using sw As StreamWriter = File.AppendText(InstallFilename)
+                                                    sw.WriteLine(RecordNode)
+                                                    RecordNode = ""
+                                                End Using
                                                 Call CSData.GoNext()
                                             Loop
                                         End If
@@ -526,13 +547,11 @@ Namespace Contensive.Addons
                                 End If
                             End If
                         Next
-                        If RecordNodes <> "" Then
-                            collectionXml = "" _
-                                    & collectionXml _
-                                    & vbCrLf & vbTab & "<data>" _
-                                    & tabIndent(RecordNodes) _
-                                    & vbCrLf & vbTab & "</data>"
-                        End If
+                        collectionXml = "</data>"
+                        Using sw As StreamWriter = File.AppendText(InstallFilename)
+                            sw.WriteLine(collectionXml)
+                            collectionXml = ""
+                        End Using
                     End If
                     '
                     ' CDef
@@ -568,6 +587,10 @@ Namespace Contensive.Addons
                                 If Pos > 0 Then
                                     Node = Mid(Node, 1, Pos + 6)
                                     collectionXml = collectionXml & vbCrLf & vbTab & Node
+                                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                                        sw.WriteLine(collectionXml)
+                                        collectionXml = ""
+                                    End Using
                                 End If
                             End If
                         End If
@@ -589,6 +612,10 @@ Namespace Contensive.Addons
                                     Code = Trim(CS2.GetText("code"))
                                     Code = EncodeCData(Code)
                                     collectionXml = collectionXml & vbCrLf & vbTab & "<ScriptingModule Name=""" & cp.Utils.EncodeHTML(CS2.GetText("name")) & """ guid=""" & ModuleGuid & """>" & Code & "</ScriptingModule>"
+                                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                                        sw.WriteLine(collectionXml)
+                                        collectionXml = ""
+                                    End Using
                                 End If
                                 Call CS2.Close()
                             End If
@@ -617,6 +644,10 @@ Namespace Contensive.Addons
                                                 & ">" _
                                                 & EncodeCData(Trim(CS2.GetText("styleFilename"))) _
                                                 & "</SharedStyle>"
+                                        Using sw As StreamWriter = File.AppendText(InstallFilename)
+                                            sw.WriteLine(collectionXml)
+                                            collectionXml = ""
+                                        End Using
                                     End If
                                     Call CS2.Close()
                                 End If
@@ -644,6 +675,10 @@ Namespace Contensive.Addons
                     End If
                     Call CS3.Close()
                     collectionXml = collectionXml & Node
+                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                        sw.WriteLine(collectionXml)
+                        collectionXml = ""
+                    End Using
                     '
                     ' wwwFileList
                     '
@@ -678,6 +713,10 @@ Namespace Contensive.Addons
                                     Else
                                         AddFileList.Add(AddFilename)
                                         collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""www"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
+                                        Using sw As StreamWriter = File.AppendText(InstallFilename)
+                                            sw.WriteLine(collectionXml)
+                                            collectionXml = ""
+                                        End Using
                                     End If
                                     ResourceCnt = ResourceCnt + 1
                                 End If
@@ -711,6 +750,10 @@ Namespace Contensive.Addons
                                 Else
                                     AddFileList.Add(AddFilename)
                                     collectionXml = collectionXml & vbCrLf & vbTab & "<Resource name=""" & cp.Utils.EncodeHTML(Filename) & """ type=""content"" path=""" & cp.Utils.EncodeHTML(Path) & """ />"
+                                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                                        sw.WriteLine(collectionXml)
+                                        collectionXml = ""
+                                    End Using
                                 End If
                                 ResourceCnt = ResourceCnt + 1
                             End If
@@ -720,6 +763,10 @@ Namespace Contensive.Addons
                     ' ExecFileListNode
                     '
                     collectionXml = collectionXml & ExecFileListNode
+                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                        sw.WriteLine(collectionXml)
+                        collectionXml = ""
+                    End Using
                     '
                     ' Other XML
                     '
@@ -727,6 +774,10 @@ Namespace Contensive.Addons
                     OtherXML = CS.GetText("otherxml")
                     If Trim(OtherXML) <> "" Then
                         collectionXml = collectionXml & vbCrLf & OtherXML
+                        Using sw As StreamWriter = File.AppendText(InstallFilename)
+                            sw.WriteLine(collectionXml)
+                            collectionXml = ""
+                        End Using
                     End If
                     '
                     ' -- v5 templates
@@ -734,11 +785,15 @@ Namespace Contensive.Addons
                     '
                     ' -- done, close collection
                     collectionXml = collectionXml & vbCrLf & "</Collection>"
+                    Using sw As StreamWriter = File.AppendText(InstallFilename)
+                        sw.WriteLine(collectionXml)
+                        collectionXml = ""
+                    End Using
                     Call CS.Close()
                     '
                     ' Save the installation file and add it to the archive
                     '
-                    Call cp.File.Save(InstallFilename, collectionXml)
+                    'Call cp.File.Save(InstallFilename, collectionXml)
                     If Not AddFileList.Contains(InstallFilename) Then
                         AddFileList.Add(InstallFilename)
                     End If
